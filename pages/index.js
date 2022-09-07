@@ -1,8 +1,22 @@
+import { useContext } from "react"
+
+// Next
 import Head from "next/head"
-import Image from "next/image"
+
+// Components
+import { Navbar } from "../components/Navbar"
+import { Layout } from "../components/Layout"
+
+// Styles
 import styles from "../styles/Home.module.css"
+import { ProductCard } from "../components/ProductCard"
+
+// Context
+import { ProductContext } from "../context/ProductContext"
 
 export default function Home() {
+  const { products } = useContext(ProductContext)
+
   return (
     <div className={styles.container}>
       <Head>
@@ -11,8 +25,27 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main>
-        <h1 className="text-6xl text-red-900">Hello world !</h1>
+      <Navbar />
+      <main className="bg-white">
+        <Layout>
+          <div className="mx-auto max-w-2xl py-10 sm:py-2  lg:max-w-7xl">
+            <div className="mt-8 grid grid-cols-1 gap-y-12 sm:grid-cols-2 sm:gap-x-6 lg:grid-cols-4 xl:gap-x-8">
+              {products.map((product) => (
+                <ProductCard
+                  key={product.id}
+                  product={product}
+                  name={product.name}
+                  href={product.href}
+                  imageAlt={product.imageAlt}
+                  imageSrc={product.imageSrc}
+                  id={product.id}
+                  color={product.color}
+                  price={product.price}
+                />
+              ))}
+            </div>
+          </div>
+        </Layout>
       </main>
     </div>
   )
