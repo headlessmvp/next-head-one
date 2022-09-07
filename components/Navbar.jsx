@@ -56,6 +56,7 @@ export const Navbar = () => {
                             <ShoppingCartIcon className="h-8 w-8" aria-hidden="true" />
                             <div className='bg-indigo-600 w-4 h-4 rounded-full text-xs items-center justify-center absolute -top-2 -right-3 flex text-white'>2</div>
                         </a> */}
+                        {/* Shopping Cart */}
                         <Popover className="ml-4 flow-root text-sm lg:relative lg:ml-8 z-50">
                             <Popover.Button className="group -m-2 flex items-center p-2">
                                 <ShoppingBagIcon
@@ -101,7 +102,7 @@ export const Navbar = () => {
 
                                         <button
                                             type="submit"
-                                            className="w-full rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-50"
+                                            className="w-full rounded-md border border-transparent bg-indigo-600 mt-6 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-50"
                                         >
                                             Checkout
                                         </button>
