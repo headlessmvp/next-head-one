@@ -3,10 +3,8 @@ import React, { useContext } from 'react'
 // Context
 import { ProductContext } from '../context/ProductContext'
 
-export const ProductCard = ({ imageSrc, imageAlt, name, color, price, href, product }) => {
+export const ProductCard = ({ imageSrc, imageAlt, name, color, price, product }) => {
     const { cart, addToCart } = useContext(ProductContext)
-
-
 
     return (
         <div>
@@ -32,7 +30,7 @@ export const ProductCard = ({ imageSrc, imageAlt, name, color, price, href, prod
                         className="absolute inset-x-0 bottom-0 h-36 bg-gradient-to-t from-black opacity-50"
                     />
                     <p className="relative text-lg font-semibold text-white">
-                        {price}
+                        ${price}
                     </p>
                 </div>
             </div>

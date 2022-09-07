@@ -1,9 +1,12 @@
-import React from 'react'
+import React, { useContext } from 'react'
 
 import { Fragment, useState } from 'react'
 import { Dialog, Disclosure, Menu, Transition } from '@headlessui/react'
 import { XMarkIcon } from '@heroicons/react/24/outline'
 import { ChevronDownIcon, FunnelIcon, MinusIcon, PlusIcon, Squares2X2Icon } from '@heroicons/react/20/solid'
+
+// Context
+import { ProductContext } from '../context/ProductContext'
 
 const sortOptions = [
     { name: 'Most Popular', href: '#', current: true },
@@ -63,6 +66,8 @@ function classNames(...classes) {
 
 export const Layout = ({ children }) => {
     const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false)
+    const { allData } = useContext(ProductContext)
+
 
     return (
         <div className="bg-white">
@@ -169,7 +174,8 @@ export const Layout = ({ children }) => {
 
                 <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                     <div className="flex items-baseline justify-between border-b border-gray-200 pt-24 pb-6">
-                        <h1 className="text-4xl font-bold tracking-tight text-gray-900">New Arrivals</h1>
+                        {allData?.categories && allData?.categories[0]?.name && <h1 className="text-4xl font-bold tracking-tight text-gray-900">{allData?.categories[0].name}</h1>
+                        }
 
                         <div className="flex items-center">
                             <Menu as="div" className="relative inline-block text-left">

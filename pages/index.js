@@ -1,4 +1,4 @@
-import { useContext } from "react"
+import { useContext, useEffect } from "react"
 
 // Next
 import Head from "next/head"
@@ -14,8 +14,18 @@ import { ProductCard } from "../components/ProductCard"
 // Context
 import { ProductContext } from "../context/ProductContext"
 
-export default function Home() {
-  const { products } = useContext(ProductContext)
+// Sanity
+import { createClient } from "next-sanity"
+
+export default function Home({ data }) {
+  const { products, setProducts, setAllData } = useContext(ProductContext)
+  // console.log("Data: ", data)
+  // console.log("Poducts: ", data.categories[0].products)
+
+  useEffect(() => {
+    setProducts(data.categories[0].products)
+    setAllData(data)
+  }, [])
 
   return (
     <div className={styles.container}>
@@ -32,12 +42,11 @@ export default function Home() {
             <div className="mt-8 grid grid-cols-1 gap-y-12 sm:grid-cols-2 sm:gap-x-6 lg:grid-cols-4 xl:gap-x-8">
               {products.map((product) => (
                 <ProductCard
-                  key={product.id}
+                  key={product.reference}
                   product={product}
                   name={product.name}
-                  href={product.href}
-                  imageAlt={product.imageAlt}
-                  imageSrc={product.imageSrc}
+                  imageAlt={product.images[0].name}
+                  imageSrc={product.images[0].url}
                   id={product.id}
                   color={product.color}
                   price={product.price}
@@ -49,4 +58,52 @@ export default function Home() {
       </main>
     </div>
   )
+}
+
+const client = createClient({
+  projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
+  dataset: process.env.NEXT_PUBLIC_SANITY_DATASET,
+  apiVersion: "2022-09-08",
+  useCdn: false,
+})
+
+export async function getStaticProps() {
+  const heads = await client.fetch(`*[_type == "head"]{
+    id,
+    name,
+    url,
+    'categories': categories[]->{
+      name,
+      label,
+      slug,
+      description,
+      'products': products[]->{
+        name,
+        description,
+        color,
+        price,
+        currency,
+        reference,
+        'images': images[]->{
+          name,
+          description,
+          'url': images.asset->url
+      }
+    }
+  }
+}`)
+
+  let filtered = {}
+
+  if (heads.length > 0) {
+    filtered = heads.filter(
+      (head) => head.id === process.env.NEXT_PUBLIC_HEAD_ID
+    )
+  }
+
+  return {
+    props: {
+      data: filtered[0],
+    },
+  }
 }

@@ -83,8 +83,8 @@ export const Navbar = () => {
                                             {cart.map((product) => (
                                                 <li key={product.id} className="flex items-center py-6">
                                                     <img
-                                                        src={product.imageSrc}
-                                                        alt={product.imageAlt}
+                                                        src={product.images[0].url}
+                                                        alt={product.images[0].name}
                                                         className="h-16 w-16 flex-none rounded-md border border-gray-200"
                                                     />
                                                     <div className="ml-4 flex-auto">
@@ -92,7 +92,7 @@ export const Navbar = () => {
                                                             <a href={product.href}>{product.name}</a>
                                                         </h3>
                                                         <p className="text-gray-500">{product.color}</p>
-                                                        <p className="text-gray-800">$24</p>
+                                                        <p className="text-gray-800">${product.price}</p>
 
                                                         <p onClick={() => removeFromCart(product.id)} className='text-red-400 cursor-pointer text-xs'>Remove</p>
                                                     </div>
