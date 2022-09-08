@@ -15,7 +15,7 @@ import { ProductCard } from "../components/ProductCard"
 import { ProductContext } from "../context/ProductContext"
 
 // Sanity
-import { createClient } from "next-sanity"
+import { client } from "../lib/client"
 
 export default function Home({ data }) {
   const { products, setProducts, setAllData } = useContext(ProductContext)
@@ -60,16 +60,49 @@ export default function Home({ data }) {
   )
 }
 
-const client = createClient({
-  projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
-  dataset: process.env.NEXT_PUBLIC_SANITY_DATASET,
-  apiVersion: "2022-09-08",
-  token: process.env.NEXT_PUBLIC_SANITY_AUTH_TOKEN,
-  useCdn: false,
-})
+// export async function getStaticProps() {
+//   const heads = await client.fetch(`*[_type == "head"]{
+//     id,
+//     name,
+//     url,
+//     'categories': categories[]->{
+//       name,
+//       label,
+//       slug,
+//       description,
+//       'products': products[]->{
+//         name,
+//         description,
+//         color,
+//         price,
+//         currency,
+//         reference,
+//         'images': images[]->{
+//           name,
+//           description,
+//           'url': images.asset->url
+//       }
+//     }
+//   }
+// }`)
 
-export async function getStaticProps() {
-  const heads = await client.fetch(`*[_type == "head"]{
+//   let filtered = {}
+
+//   if (heads.length > 0) {
+//     filtered = heads.filter(
+//       (head) => head.id === process.env.NEXT_PUBLIC_HEAD_ID
+//     )
+//   }
+
+//   return {
+//     props: {
+//       data: filtered[0],
+//     },
+//   }
+// }
+
+export async function getServerSideProps() {
+  const query = `*[_type == "head"]{
     id,
     name,
     url,
@@ -92,7 +125,8 @@ export async function getStaticProps() {
       }
     }
   }
-}`)
+}`
+  const heads = await client.fetch(query)
 
   let filtered = {}
 
