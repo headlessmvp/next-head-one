@@ -21,7 +21,7 @@ export default function Home({ data }) {
   const { products, setProducts, setAllData } = useContext(ProductContext)
   // console.log("Data: ", data)
   // console.log("Poducts: ", data.categories[0].products)
-
+  console.log("DATA GOT: ", products)
   useEffect(() => {
     setProducts(data.categories[0].products)
     setAllData(data)
