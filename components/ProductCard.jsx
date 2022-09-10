@@ -3,8 +3,14 @@ import React, { useContext } from 'react'
 // Context
 import { ProductContext } from '../context/ProductContext'
 
-export const ProductCard = ({ imageSrc, imageAlt, name, color, price, product }) => {
-    const { cart, addToCart } = useContext(ProductContext)
+// Commerce Layer
+import {
+    PricesContainer,
+    Price,
+} from "@commercelayer/react-components"
+
+export const ProductCard = ({ imageSrc, imageAlt, name, color, price, product, reference }) => {
+    const { addToCart } = useContext(ProductContext)
 
     return (
         <div>
@@ -29,9 +35,13 @@ export const ProductCard = ({ imageSrc, imageAlt, name, color, price, product })
                         aria-hidden="true"
                         className="absolute inset-x-0 bottom-0 h-36 bg-gradient-to-t from-black opacity-50"
                     />
-                    <p className="relative text-lg font-semibold text-white">
+                    {/* <p className="relative text-lg font-semibold text-white">
                         ${price}
-                    </p>
+                    </p> */}
+                    <PricesContainer>
+                        <Price skuCode={reference} className="relative text-lg font-semibold text-white" compareClassName="line-through text-sm md:text-xs ml-2 mb-1"
+                        />
+                    </PricesContainer>
                 </div>
             </div>
             <div className="mt-6">

@@ -9,14 +9,16 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@commercelayer/js-auth": "^2.3.0",
+    "@commercelayer/react-components": "^3.15.0",
     "@headlessui/react": "^1.7.0",
     "@heroicons/react": "^2.0.10",
     "@sanity/client": "^3.3.6",
     "@tailwindcss/forms": "^0.5.3",
     "next": "12.2.5",
     "next-sanity": "^0.8.4",
-    "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "react": "^17.0.0",
+    "react-dom": "^17.0.0"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.8",

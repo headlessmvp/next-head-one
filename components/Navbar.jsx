@@ -81,7 +81,7 @@ export const Navbar = () => {
                                     <form className="mx-auto max-w-2xl px-4">
                                         <ul role="list" className="divide-y divide-gray-200">
                                             {cart.map((product) => (
-                                                <li key={product.id} className="flex items-center py-6">
+                                                <li key={product.reference} className="flex items-center py-6">
                                                     <img
                                                         src={product.images[0].url}
                                                         alt={product.images[0].name}
@@ -94,7 +94,7 @@ export const Navbar = () => {
                                                         <p className="text-gray-500">{product.color}</p>
                                                         <p className="text-gray-800">${product.price}</p>
 
-                                                        <p onClick={() => removeFromCart(product.id)} className='text-red-400 cursor-pointer text-xs'>Remove</p>
+                                                        <p onClick={() => removeFromCart(product.reference)} className='text-red-400 cursor-pointer text-xs'>Remove</p>
                                                     </div>
                                                 </li>
                                             ))}
