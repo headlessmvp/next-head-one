@@ -45,9 +45,9 @@ export default function Home({ data }) {
       <OrderStorage persistKey="abc-002">
         <OrderContainer
           attributes={{
-            cart_url: "http://localhost:3000/cart",
-            return_url: "http://localhost:3000/",
-            privacy_url: "http://localhost:3000/",
+            cart_url: `${location.origin}/cart`,
+            return_url: `${location.origin}`,
+            privacy_url: `${location.origin}`,
           }}
         >
           <ItemContainer>
