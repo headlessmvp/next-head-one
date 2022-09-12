@@ -29,14 +29,16 @@ export default function Home({ data }) {
   const { products, setProducts, setAllData, token } =
     useContext(ProductContext)
 
-  // console.log("Data: ", data)
-  // console.log("Poducts: ", data.categories[0].products)
-  console.log("DATA GOT: ", products)
+  const [origin, setOrigin] = useState("http://localhost:3000")
+
   useEffect(() => {
     setProducts(data.categories[0].products)
     setAllData(data)
   }, [])
 
+  useEffect(() => {
+    setOrigin(location.origin)
+  }, [])
   return (
     <CommerceLayer
       accessToken={token}
@@ -45,9 +47,9 @@ export default function Home({ data }) {
       <OrderStorage persistKey="abc-002">
         <OrderContainer
           attributes={{
-            cart_url: `${location.origin}/cart`,
-            return_url: `${location.origin}`,
-            privacy_url: `${location.origin}`,
+            cart_url: `${origin}/cart`,
+            return_url: `${origin}`,
+            privacy_url: `${origin}`,
           }}
         >
           <ItemContainer>
