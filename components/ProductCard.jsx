@@ -7,6 +7,8 @@ import { ProductContext } from '../context/ProductContext'
 import {
     PricesContainer,
     Price,
+    AddToCartButton,
+    AvailabilityContainer, AvailabilityTemplate
 } from "@commercelayer/react-components"
 
 export const ProductCard = ({ imageSrc, imageAlt, name, color, price, product, reference }) => {
@@ -38,20 +40,30 @@ export const ProductCard = ({ imageSrc, imageAlt, name, color, price, product, r
                     {/* <p className="relative text-lg font-semibold text-white">
                         ${price}
                     </p> */}
+
                     <PricesContainer>
                         <Price skuCode={reference} className="relative text-lg font-semibold text-white" compareClassName="line-through text-sm md:text-xs ml-2 mb-1"
                         />
                     </PricesContainer>
                 </div>
             </div>
+            <AvailabilityContainer>
+                <AvailabilityTemplate />
+            </AvailabilityContainer>
+
             <div className="mt-6">
-                <button
+                <AddToCartButton
+                    label={"Add to bag"}
+                    skuCode={reference}
+                    className="relative w-full flex items-center justify-center rounded-md border border-transparent bg-gray-100 py-2 px-8 text-sm font-medium text-gray-900 hover:bg-gray-200 cursor-pointer"
+                />
+                {/* <button
                     className="relative w-full flex items-center justify-center rounded-md border border-transparent bg-gray-100 py-2 px-8 text-sm font-medium text-gray-900 hover:bg-gray-200"
                     onClick={() => addToCart(product)}
                 >
                     Add to bag
                     <span className="sr-only">, {name}</span>
-                </button>
+                </button> */}
             </div>
         </div>)
 }
