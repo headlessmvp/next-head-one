@@ -32,8 +32,8 @@ export default function Home({ data }) {
   const [origin, setOrigin] = useState("http://localhost:3000")
 
   useEffect(() => {
-    setSubCategories(data.subCategories)
-    data.subCategories.map((subCategory) => {
+    setSubCategories(data.categories[0].subCategories)
+    data.categories[0].subCategories.map((subCategory) => {
       if (subCategory.name.search("all") !== -1) {
         setProducts(subCategory.products)
       }
@@ -105,6 +105,10 @@ export async function getServerSideProps() {
     name,
     url,
     'categories': categories[]->{
+      name,
+      label,
+      slug,
+      description,
     'subCategories': subCategories[]->{
       name,
       label,
@@ -137,7 +141,7 @@ export async function getServerSideProps() {
 
   return {
     props: {
-      data: filtered[0].categories[0],
+      data: filtered[0],
     },
   }
 }

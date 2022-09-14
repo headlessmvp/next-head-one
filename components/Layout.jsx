@@ -67,9 +67,7 @@ export const Layout = ({ children }) => {
     } = useContext(ProductContext)
 
     const setNewProducts = (subCategoryName) => {
-        console.log("Name ", subCategoryName)
         let filtered = subCategories.filter(cat => cat.name === subCategoryName)
-        console.log("Filtered ", filtered)
         setProducts(filtered[0].products)
     }
 
@@ -128,7 +126,7 @@ export const Layout = ({ children }) => {
                                             ))}
                                         </ul>
 
-                                        {filters.map((section) => (
+                                        {/* {filters.map((section) => (
                                             <Disclosure as="div" key={section.id} className="border-t border-gray-200 px-4 py-6">
                                                 {({ open }) => (
                                                     <>
@@ -169,7 +167,7 @@ export const Layout = ({ children }) => {
                                                     </>
                                                 )}
                                             </Disclosure>
-                                        ))}
+                                        ))} */}
                                     </form>
                                 </Dialog.Panel>
                             </Transition.Child>
@@ -183,7 +181,7 @@ export const Layout = ({ children }) => {
                         }
 
                         <div className="flex items-center">
-                            <Menu as="div" className="relative inline-block text-left">
+                            {/* <Menu as="div" className="relative inline-block text-left">
                                 <div>
                                     <Menu.Button className="group inline-flex justify-center text-sm font-medium text-gray-700 hover:text-gray-900">
                                         Sort
@@ -224,12 +222,12 @@ export const Layout = ({ children }) => {
                                         </div>
                                     </Menu.Items>
                                 </Transition>
-                            </Menu>
+                            </Menu> */}
 
-                            <button type="button" className="-m-2 ml-5 p-2 text-gray-400 hover:text-gray-500 sm:ml-7">
+                            {/* <button type="button" className="-m-2 ml-5 p-2 text-gray-400 hover:text-gray-500 sm:ml-7">
                                 <span className="sr-only">View grid</span>
                                 <Squares2X2Icon className="h-5 w-5" aria-hidden="true" />
-                            </button>
+                            </button> */}
                             <button
                                 type="button"
                                 className="-m-2 ml-4 p-2 text-gray-400 hover:text-gray-500 sm:ml-6 lg:hidden"
@@ -258,7 +256,7 @@ export const Layout = ({ children }) => {
                                     ))}
                                 </ul>
 
-                                {filters.map((section) => (
+                                {/* {filters.map((section) => (
                                     <Disclosure as="div" key={section.id} className="border-b border-gray-200 py-6">
                                         {({ open }) => (
                                             <>
@@ -299,7 +297,7 @@ export const Layout = ({ children }) => {
                                             </>
                                         )}
                                     </Disclosure>
-                                ))}
+                                ))} */}
                             </form>
 
                             {/* Product grid */}

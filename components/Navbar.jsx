@@ -49,23 +49,25 @@ export const Navbar = () => {
                         <div className="md:hidden">
                             <h2 className="text-xl">Head 01</h2>
                         </div>
-                        <div className="-my-2 -mr-2 md:hidden">
-                            <Popover.Button className="inline-flex items-center justify-center rounded-md bg-white p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500">
-                                <span className="sr-only">Open menu</span>
-                                <Bars3Icon className="h-6 w-6" aria-hidden="true" />
-                            </Popover.Button>
+                        <div className="-my-2 flex -mr-2 md:hidden">
+                            <ShoppingBagIcon
+                                className="h-6 w-6 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
+                                aria-hidden="true"
+                            />
+                            <span className="ml-2 text-sm font-medium text-gray-700 group-hover:text-gray-800"><LineItemsCount /></span>
+
                         </div>
 
                         <div className="hidden md:block">
                             <h2 className="text-2xl">Head 01</h2>
                         </div>
                         <div className="hidden items-center justify-end md:flex md:flex-1 lg:w-0">
-                            <a
+                            {/* <a
                                 href="#"
                                 className="whitespace-nowrap text-base font-medium text-gray-500 hover:text-gray-900"
                             >
                                 Sign in
-                            </a>
+                            </a> */}
                             {/* <a
                             href="#"
                             className="ml-8 inline-flex items-center justify-center whitespace-nowrap rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700"
@@ -195,7 +197,7 @@ export const Navbar = () => {
                                 <div className="mt-6"></div>
                             </div>
 
-                            <div className="space-y-6 py-6 px-5">
+                            {/* <div className="space-y-6 py-6 px-5">
                                 <div>
                                     <a
                                         href="#"
@@ -210,7 +212,7 @@ export const Navbar = () => {
                                         </a>
                                     </p>
                                 </div>
-                            </div>
+                            </div> */}
                         </div>
                     </Popover.Panel>
                 </Transition>
