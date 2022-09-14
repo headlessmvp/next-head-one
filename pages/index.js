@@ -26,14 +26,28 @@ import {
 } from "@commercelayer/react-components"
 
 export default function Home({ data }) {
-  const { products, setProducts, setAllData, token } =
-    useContext(ProductContext)
+  const {
+    products,
+    setProducts,
+    setAllData,
+    token,
+    subCategories,
+    setSubCategories,
+  } = useContext(ProductContext)
 
   const [origin, setOrigin] = useState("http://localhost:3000")
 
   useEffect(() => {
-    setProducts(data.categories[0].products)
-    setAllData(data)
+    console.log("DATA ", data.subCategories)
+    setSubCategories(data.subCategories)
+    data.subCategories.map((subCategory) => {
+      if (subCategory.name.search("all") !== -1) {
+        setProducts(subCategory.products)
+      }
+    })
+
+    // setProducts(data.categories[0].products)
+    // setAllData(data)
   }, [])
 
   useEffect(() => {
@@ -140,6 +154,7 @@ export async function getServerSideProps() {
     name,
     url,
     'categories': categories[]->{
+    'subCategories': subCategories[]->{
       name,
       label,
       slug,
@@ -156,7 +171,7 @@ export async function getServerSideProps() {
           description,
           'url': images.asset->url
       }
-    }
+    }}
   }
 }`
   const heads = await client.fetch(query)
@@ -171,7 +186,7 @@ export async function getServerSideProps() {
 
   return {
     props: {
-      data: filtered[0],
+      data: filtered[0].categories[0],
     },
   }
 }
