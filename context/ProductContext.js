@@ -38,7 +38,6 @@ export const ProductProvider = ({ children }) => {
       //   authResp?.expired()
       // )
       setToken(authResp?.accessToken)
-      // TODO : Add to Localstorage for session
       localStorage.setItem("token", JSON.stringify(authResp?.accessToken))
     }
   }
