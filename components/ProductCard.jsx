@@ -1,7 +1,5 @@
-import React, { useContext } from 'react'
+import React from 'react'
 
-// Context
-import { ProductContext } from '../context/ProductContext'
 
 // Commerce Layer
 import {
@@ -11,8 +9,10 @@ import {
     AvailabilityContainer, AvailabilityTemplate
 } from "@commercelayer/react-components"
 
+// Next
+import Link from 'next/link'
+
 export const ProductCard = ({ imageSrc, imageAlt, name, color, price, product, reference }) => {
-    const { addToCart } = useContext(ProductContext)
 
     return (
         <div>
@@ -25,9 +25,9 @@ export const ProductCard = ({ imageSrc, imageAlt, name, color, price, product, r
                     />
                 </div>
                 <div className="relative mt-4">
-                    <h3 className="text-sm font-medium text-gray-900">
+                    <Link href={`product/${reference}`} className="text-sm cursor-pointer hover:text-indigo-700 font-medium text-gray-900">
                         {name}
-                    </h3>
+                    </Link>
                     <p className="mt-1 text-sm text-gray-500">
                         {color}
                     </p>
@@ -37,9 +37,6 @@ export const ProductCard = ({ imageSrc, imageAlt, name, color, price, product, r
                         aria-hidden="true"
                         className="absolute inset-x-0 bottom-0 h-36 bg-gradient-to-t from-black opacity-50"
                     />
-                    {/* <p className="relative text-lg font-semibold text-white">
-                        ${price}
-                    </p> */}
 
                     <PricesContainer>
                         <Price skuCode={reference} className="relative text-lg font-semibold text-white" compareClassName="line-through text-sm md:text-xs ml-2 mb-1"
@@ -57,13 +54,7 @@ export const ProductCard = ({ imageSrc, imageAlt, name, color, price, product, r
                     skuCode={reference}
                     className="relative w-full flex items-center justify-center rounded-md border border-transparent bg-gray-100 py-2 px-8 text-sm font-medium text-gray-900 hover:bg-gray-200 cursor-pointer"
                 />
-                {/* <button
-                    className="relative w-full flex items-center justify-center rounded-md border border-transparent bg-gray-100 py-2 px-8 text-sm font-medium text-gray-900 hover:bg-gray-200"
-                    onClick={() => addToCart(product)}
-                >
-                    Add to bag
-                    <span className="sr-only">, {name}</span>
-                </button> */}
+
             </div>
         </div>)
 }

@@ -12,6 +12,16 @@ export const ProductProvider = ({ children }) => {
   const [cart, setCart] = useState([])
   const [token, setToken] = useState("")
   const [auth, setAuth] = useState(null)
+  const compareSizes = [
+    { name: "XXS" },
+    { name: "XS" },
+    { name: "S" },
+    { name: "M" },
+    { name: "L" },
+    { name: "XL" },
+    { name: "2XL" },
+    { name: "3XL" },
+  ]
 
   const addToCart = (product) => {
     setCart([...cart, product])
@@ -71,6 +81,7 @@ export const ProductProvider = ({ children }) => {
         token,
         subCategories,
         setSubCategories,
+        compareSizes,
       }}
     >
       {children}

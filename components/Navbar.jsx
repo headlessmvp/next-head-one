@@ -1,17 +1,13 @@
-import React, { Fragment, useContext } from "react"
+import React, { Fragment } from "react"
 
 // Headless UI
 import { Popover, Transition } from "@headlessui/react"
 
 // Heroicons
 import {
-    Bars3Icon,
     XMarkIcon,
     ShoppingBagIcon,
 } from "@heroicons/react/24/outline"
-
-// Context
-import { ProductContext } from "../context/ProductContext"
 
 // Commerce Layer
 import {
@@ -24,12 +20,11 @@ import {
     LineItemImage,
     LineItemQuantity,
     LineItemName,
-    Errors,
     LineItemRemoveLink,
 } from "@commercelayer/react-components"
+import Link from "next/link"
 
 export const Navbar = () => {
-    const { cart, removeFromCart } = useContext(ProductContext)
 
     return (
         <LineItemsContainer>
@@ -47,7 +42,7 @@ export const Navbar = () => {
                             </a>
                         </div>
                         <div className="md:hidden">
-                            <h2 className="text-xl">Head 01</h2>
+                            <Link className="text-xl cursor-pointer" href={'/'}>Head 01</Link>
                         </div>
                         <div className="-my-2 flex -mr-2 md:hidden">
                             <ShoppingBagIcon
@@ -59,25 +54,10 @@ export const Navbar = () => {
                         </div>
 
                         <div className="hidden md:block">
-                            <h2 className="text-2xl">Head 01</h2>
+                            <Link className="text-2xl cursor-pointer" href={'/'}>Head 01</Link>
                         </div>
                         <div className="hidden items-center justify-end md:flex md:flex-1 lg:w-0">
-                            {/* <a
-                                href="#"
-                                className="whitespace-nowrap text-base font-medium text-gray-500 hover:text-gray-900"
-                            >
-                                Sign in
-                            </a> */}
-                            {/* <a
-                            href="#"
-                            className="ml-8 inline-flex items-center justify-center whitespace-nowrap rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700"
-                        >
-                            Sign up
-                        </a> */}
-                            {/* <a href="#" className="whitespace-nowrap ml-6 text-base font-medium text-gray-500 hover:text-gray-900 relative">
-                            <ShoppingCartIcon className="h-8 w-8" aria-hidden="true" />
-                            <div className='bg-indigo-600 w-4 h-4 rounded-full text-xs items-center justify-center absolute -top-2 -right-3 flex text-white'>2</div>
-                        </a> */}
+
                             {/* Shopping Cart */}
                             <Popover className="ml-4 flow-root text-sm lg:relative lg:ml-8 z-50">
                                 <Popover.Button className="group -m-2 flex items-center p-2">
@@ -123,36 +103,13 @@ export const Navbar = () => {
 
                                             </ul>
 
-                                            {/* <ul role="list" className="divide-y divide-gray-200">
-                                                    {cart.map((product) => (
-                                                        <li key={product.reference} className="flex items-center py-6">
-                                                            <img
-                                                                src={product.images[0].url}
-                                                                alt={product.images[0].name}
-                                                                className="h-16 w-16 flex-none rounded-md border border-gray-200"
-                                                            />
-                                                            <div className="ml-4 flex-auto">
-                                                                <h3 className="font-medium text-gray-900">
-                                                                    <a href={product.href}>{product.name}</a>
-                                                                </h3>
-                                                                <p className="text-gray-500">{product.color}</p>
-                                                                <p className="text-gray-800">${product.price}</p>
 
-                                                                <p onClick={() => removeFromCart(product.reference)} className='text-red-400 cursor-pointer text-xs'>Remove</p>
-                                                            </div>
-                                                        </li>
-                                                    ))}
-                                                </ul> */}
                                             <p className="text-base">Total: <TotalAmount className="text-base" /></p>
                                             <CheckoutLink
                                                 type="submit"
                                                 className="w-full rounded-md border border-transparent bg-indigo-600 mt-6 py-2 px-4 text-center text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-50"
                                             />
-                                            {/* <button
-                                            type="submit"
-                                              >
-                                            Checkout
-                                        </button> */}
+
                                         </form>
                                     </Popover.Panel>
                                 </Transition>
@@ -197,22 +154,6 @@ export const Navbar = () => {
                                 <div className="mt-6"></div>
                             </div>
 
-                            {/* <div className="space-y-6 py-6 px-5">
-                                <div>
-                                    <a
-                                        href="#"
-                                        className="flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700"
-                                    >
-                                        Sign up
-                                    </a>
-                                    <p className="mt-6 text-center text-base font-medium text-gray-500">
-                                        Existing customer?{" "}
-                                        <a href="#" className="text-indigo-600 hover:text-indigo-500">
-                                            Sign in
-                                        </a>
-                                    </p>
-                                </div>
-                            </div> */}
                         </div>
                     </Popover.Panel>
                 </Transition>
