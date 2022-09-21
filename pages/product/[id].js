@@ -496,7 +496,7 @@ export async function getServerSideProps() {
         'sizes': sizes[]->{
           name,
         },
-        color,
+        caption,
         price,
         currency,
         reference,

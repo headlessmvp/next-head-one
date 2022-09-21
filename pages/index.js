@@ -82,7 +82,7 @@ export default function Home({ data }) {
                           imageAlt={product.images[0].name}
                           imageSrc={product.images[0].url}
                           id={product.id}
-                          color={product.color}
+                          color={product.caption}
                           price={product.price}
                           reference={product.reference}
                         />
@@ -117,7 +117,7 @@ export async function getServerSideProps() {
       'products': products[]->{
         name,
         description,
-        color,
+        caption,
         price,
         currency,
         reference,
