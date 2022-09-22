@@ -32,14 +32,14 @@ export const Navbar = () => {
                 <div className="mx-auto max-w-7xl px-4 sm:px-6">
                     <div className="flex items-center justify-between border-b-2 border-gray-100 py-6 md:justify-start md:space-x-10">
                         <div className="flex justify-start lg:w-0 lg:flex-1">
-                            <a href="#">
-                                <span className="sr-only">Your Company</span>
+                            <span className="sr-only">Your Company</span>
+                            <Link href="/">
                                 <img
-                                    className="h-8 w-auto sm:h-10"
+                                    className="h-8 cursor-pointer w-auto sm:h-10"
                                     src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
                                     alt=""
                                 />
-                            </a>
+                            </Link>
                         </div>
                         <div className="md:hidden">
                             <Link className="text-xl cursor-pointer" href={'/'}>Head 01</Link>
