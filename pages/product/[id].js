@@ -3,15 +3,20 @@ import { useEffect, useState, useContext } from "react"
 // Headless UI
 import { RadioGroup } from "@headlessui/react"
 
-// Router
+// Next
 import { useRouter } from "next/router"
 import Link from "next/link"
+import Image from "next/image"
 
 // Sanity Client
 import { client } from "../../lib/client"
 
 // Components
 import { Navbar } from "../../components/Navbar"
+
+// Utils
+import { mapImageResources } from "../../lib/cloudinary"
+import { cloudinaryUrl } from "../../utils"
 
 // Context
 import { ProductContext } from "../../context/ProductContext"
@@ -25,6 +30,7 @@ import {
   AddToCartButton,
   PricesContainer,
   Price,
+  Errors,
 } from "@commercelayer/react-components"
 
 const product = {
@@ -99,6 +105,7 @@ export default function ProductDetails({ data, sizes }) {
   const [selectedSize, setSelectedSize] = useState(product.sizes[2])
   const [productDetails, setProductDetails] = useState({})
   const [showSizes, setShowSizes] = useState([])
+  const [images, setImages] = useState()
 
   const [origin, setOrigin] = useState("http://localhost:3000")
 
@@ -138,7 +145,24 @@ export default function ProductDetails({ data, sizes }) {
     }
   }, [productDetails])
 
-  console.log("Details : ", productDetails)
+  useEffect(() => {
+    if (productDetails?.reference) {
+      ;(async function run() {
+        const results = await fetch("/api/search", {
+          method: "POST",
+          body: JSON.stringify({
+            expression: `${process.env.NEXT_PUBLIC_CLOUDINARY_ASSETS_TAG} AND context.reference:${productDetails?.reference}`,
+            with_field: "context",
+            max_results: 4,
+          }),
+        }).then((resp) => resp.json())
+        let { resources } = results
+        const imgs = mapImageResources(resources)
+        setImages(imgs)
+      })()
+    }
+  }, [productDetails])
+
   return (
     <CommerceLayer
       accessToken={token}
@@ -196,60 +220,52 @@ export default function ProductDetails({ data, sizes }) {
                   </nav>
 
                   {/* Image gallery */}
-
                   <div className="mx-auto mt-6 max-w-2xl sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-3 lg:gap-x-8 lg:px-8">
                     <div className="aspect-w-3 aspect-h-4 hidden overflow-hidden rounded-lg lg:block">
-                      {productDetails?.images[0] && (
-                        <img
-                          src={productDetails?.images[0].url}
-                          alt={productDetails?.images[0].name}
+                      {images && images[0] && (
+                        <Image
+                          src={cloudinaryUrl(images[0].title)}
+                          alt={images[0].title}
                           className="h-full w-full object-cover object-center"
+                          layout="fill"
+                          unoptimized={true}
                         />
                       )}
                     </div>
                     <div className="hidden lg:grid lg:grid-cols-1 lg:gap-y-8">
                       <div className="aspect-w-3 aspect-h-2 overflow-hidden rounded-lg">
-                        {productDetails?.images[1] && (
-                          <img
-                            src={productDetails?.images[1].url}
-                            alt={productDetails?.images[1].name}
+                        {images && images[1] && (
+                          <Image
+                            src={cloudinaryUrl(images[1].title)}
+                            alt={images[1].title}
                             className="h-full w-full object-cover object-center"
+                            layout="fill"
+                            unoptimized={true}
                           />
                         )}
-                        {/* <img
-                          src={productDetails?.images[1].url}
-                          alt={productDetails?.images[1].name}
-                          className="h-full w-full object-cover object-center"
-                        /> */}
                       </div>
                       <div className="aspect-w-3 aspect-h-2 overflow-hidden rounded-lg">
-                        {productDetails?.images[2] && (
-                          <img
-                            src={productDetails?.images[2].url}
-                            alt={productDetails?.images[2].name}
+                        {images && images[2] && (
+                          <Image
+                            src={cloudinaryUrl(images[2].title)}
+                            alt={images[2].title}
                             className="h-full w-full object-cover object-center"
+                            layout="fill"
+                            unoptimized={true}
                           />
                         )}
-                        {/* <img
-                          src={productDetails?.images[2].url}
-                          alt={productDetails?.images[2].name}
-                          className="h-full w-full object-cover object-center"
-                        /> */}
                       </div>
                     </div>
                     <div className="aspect-w-4 aspect-h-5 sm:overflow-hidden sm:rounded-lg lg:aspect-w-3 lg:aspect-h-4">
-                      {productDetails?.images[3] && (
-                        <img
-                          src={productDetails?.images[3].url}
-                          alt={productDetails?.images[3].name}
+                      {images && images[3] && (
+                        <Image
+                          src={cloudinaryUrl(images[3].title)}
+                          alt={images[3].title}
                           className="h-full w-full object-cover object-center"
+                          layout="fill"
+                          unoptimized={true}
                         />
                       )}
-                      {/* <img
-                        src={productDetails?.images[3].url}
-                        alt={productDetails?.images[3].name}
-                        className="h-full w-full object-cover object-center"
-                      /> */}
                     </div>
                   </div>
 
@@ -404,6 +420,12 @@ export default function ProductDetails({ data, sizes }) {
                           skuCode={productDetails?.reference}
                           className="mt-10 flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 py-3 px-8 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 cursor-pointer"
                         />
+
+                        <Errors
+                          className="text-red-500 my-2 block text-center"
+                          resource="orders"
+                        />
+
                         {/* <button
                 type="submit"
                 className="mt-10 flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 py-3 px-8 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"

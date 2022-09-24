@@ -45,6 +45,7 @@ export default function Home({ data }) {
   useEffect(() => {
     setOrigin(location.origin)
   }, [])
+
   return (
     <CommerceLayer
       accessToken={token}
@@ -127,6 +128,8 @@ export async function getServerSideProps() {
     }}
   }
 }`
+
+  // Get Sanity Data
   const heads = await client.fetch(query)
 
   let filtered = {}
