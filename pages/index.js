@@ -70,7 +70,7 @@ export default function Home({ data }) {
                 <link rel="icon" href="/favicon.ico" />
               </Head>
 
-              <Navbar />
+              {/* <Navbar /> */}
               <main className="bg-white">
                 <Layout>
                   <div className="mx-auto max-w-2xl py-10 sm:py-2  lg:max-w-7xl">
