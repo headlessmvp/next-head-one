@@ -247,6 +247,7 @@ export async function getServerSideProps() {
     url,
     bannerHeading,
     bannerText,
+    saleText,
     bannerImage{
       'url': asset->url
     },
