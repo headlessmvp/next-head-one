@@ -1,15 +1,24 @@
-import { useContext, useEffect, useState } from "react"
+import { useContext, useEffect, useState, Fragment } from "react"
+
+// Headless UI
+import { Dialog, Popover, Tab, Transition } from "@headlessui/react"
+
+// Heroicons
+import {
+  Bars3Icon,
+  MagnifyingGlassIcon,
+  ShoppingBagIcon,
+  XMarkIcon,
+} from "@heroicons/react/24/outline"
+
+// Next
+import Link from "next/link"
 
 // Next
 import Head from "next/head"
 
-// Components
-import { Navbar } from "../components/Navbar"
-import { Layout } from "../components/Layout"
-
 // Styles
 import styles from "../styles/Home.module.css"
-import { ProductCard } from "../components/ProductCard"
 
 // Context
 import { ProductContext } from "../context/ProductContext"
@@ -25,9 +34,160 @@ import {
   OrderStorage,
 } from "@commercelayer/react-components"
 
+// Components
+import { Hero } from "../components/sections/Hero"
+import { Category } from "../components/sections/Category"
+import { Featured } from "../components/sections/Featured"
+import { Favourites } from "../components/sections/Favourites"
+import { CTA } from "../components/sections/CTA"
+import { Footer } from "../components/Footer"
+import { ProductCard } from "../components/ProductCard"
+import { Layout } from "../components/Layout"
+
+const navigation = {
+  categories: [
+    {
+      id: "women",
+      name: "Women",
+      featured: [
+        {
+          name: "New Arrivals",
+          href: "#",
+          imageSrc:
+            "https://tailwindui.com/img/ecommerce-images/mega-menu-category-01.jpg",
+          imageAlt:
+            "Models sitting back to back, wearing Basic Tee in black and bone.",
+        },
+        {
+          name: "Basic Tees",
+          href: "#",
+          imageSrc:
+            "https://tailwindui.com/img/ecommerce-images/mega-menu-category-02.jpg",
+          imageAlt:
+            "Close up of Basic Tee fall bundle with off-white, ochre, olive, and black tees.",
+        },
+      ],
+      sections: [
+        {
+          id: "clothing",
+          name: "Clothing",
+          items: [
+            { name: "Tops", href: "#" },
+            { name: "Dresses", href: "#" },
+            { name: "Pants", href: "#" },
+            { name: "Denim", href: "#" },
+            { name: "Sweaters", href: "#" },
+            { name: "T-Shirts", href: "#" },
+            { name: "Jackets", href: "#" },
+            { name: "Activewear", href: "#" },
+            { name: "Browse All", href: "#" },
+          ],
+        },
+        {
+          id: "accessories",
+          name: "Accessories",
+          items: [
+            { name: "Watches", href: "#" },
+            { name: "Wallets", href: "#" },
+            { name: "Bags", href: "#" },
+            { name: "Sunglasses", href: "#" },
+            { name: "Hats", href: "#" },
+            { name: "Belts", href: "#" },
+          ],
+        },
+        {
+          id: "brands",
+          name: "Brands",
+          items: [
+            { name: "Full Nelson", href: "#" },
+            { name: "My Way", href: "#" },
+            { name: "Re-Arranged", href: "#" },
+            { name: "Counterfeit", href: "#" },
+            { name: "Significant Other", href: "#" },
+          ],
+        },
+      ],
+    },
+    {
+      id: "men",
+      name: "Men",
+      featured: [
+        {
+          name: "New Arrivals",
+          href: "#",
+          imageSrc:
+            "https://tailwindui.com/img/ecommerce-images/product-page-04-detail-product-shot-01.jpg",
+          imageAlt:
+            "Drawstring top with elastic loop closure and textured interior padding.",
+        },
+        {
+          name: "Artwork Tees",
+          href: "#",
+          imageSrc:
+            "https://tailwindui.com/img/ecommerce-images/category-page-02-image-card-06.jpg",
+          imageAlt:
+            "Three shirts in gray, white, and blue arranged on table with same line drawing of hands and shapes overlapping on front of shirt.",
+        },
+      ],
+      sections: [
+        {
+          id: "clothing",
+          name: "Clothing",
+          items: [
+            { name: "Tops", href: "#" },
+            { name: "Pants", href: "#" },
+            { name: "Sweaters", href: "#" },
+            { name: "T-Shirts", href: "#" },
+            { name: "Jackets", href: "#" },
+            { name: "Activewear", href: "#" },
+            { name: "Browse All", href: "#" },
+          ],
+        },
+        {
+          id: "accessories",
+          name: "Accessories",
+          items: [
+            { name: "Watches", href: "#" },
+            { name: "Wallets", href: "#" },
+            { name: "Bags", href: "#" },
+            { name: "Sunglasses", href: "#" },
+            { name: "Hats", href: "#" },
+            { name: "Belts", href: "#" },
+          ],
+        },
+        {
+          id: "brands",
+          name: "Brands",
+          items: [
+            { name: "Re-Arranged", href: "#" },
+            { name: "Counterfeit", href: "#" },
+            { name: "Full Nelson", href: "#" },
+            { name: "My Way", href: "#" },
+          ],
+        },
+      ],
+    },
+  ],
+  pages: [
+    { name: "Company", href: "#" },
+    { name: "Stores", href: "#" },
+  ],
+}
+
+function classNames(...classes) {
+  return classes.filter(Boolean).join(" ")
+}
+
 export default function Home({ data }) {
-  const { products, setProducts, setAllData, token, setSubCategories } =
-    useContext(ProductContext)
+  const {
+    products,
+    setProducts,
+    setAllData,
+    token,
+    setSubCategories,
+    allData,
+  } = useContext(ProductContext)
+  const [open, setOpen] = useState(false)
 
   const [origin, setOrigin] = useState("http://localhost:3000")
 
@@ -46,55 +206,27 @@ export default function Home({ data }) {
     setOrigin(location.origin)
   }, [])
 
-  return (
-    <CommerceLayer
-      accessToken={token}
-      endpoint={process.env.NEXT_PUBLIC_CL_BASE_ENDPOINT}
-    >
-      <OrderStorage persistKey="abc-002">
-        <OrderContainer
-          attributes={{
-            cart_url: `${origin}`,
-            return_url: `${origin}`,
-            privacy_url: `${origin}`,
-          }}
-        >
-          <ItemContainer>
-            <div className={styles.container}>
-              <Head>
-                <title>Head 01</title>
-                <meta
-                  name="description"
-                  content="Generated by create next app"
-                />
-                <link rel="icon" href="/favicon.ico" />
-              </Head>
+  console.log("DATA: ", allData)
 
-              {/* <Navbar /> */}
-              <main className="bg-white">
-                <Layout>
-                  <div className="mx-auto max-w-2xl py-10 sm:py-2  lg:max-w-7xl">
-                    <div className="grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
-                      {products.map((product) => (
-                        <ProductCard
-                          key={product.reference}
-                          name={product.name}
-                          imageAlt={product.images[0].name}
-                          imageSrc={product.images[0].url}
-                          id={product.id}
-                          price={product.price}
-                          reference={product.reference}
-                        />
-                      ))}
-                    </div>
-                  </div>
-                </Layout>
-              </main>
-            </div>
-          </ItemContainer>
-        </OrderContainer>
-      </OrderStorage>
-    </CommerceLayer>
+  return (
+    <Layout>
+      <div className="relative overflow-hidden">
+        {/* Hero section */}
+        <Hero />
+      </div>
+
+      {/* Category section */}
+      <Category />
+
+      {/* Featured section */}
+      <Featured />
+
+      {/* Favorites section */}
+      <Favourites />
+
+      {/* CTA section */}
+      <CTA />
+    </Layout>
   )
 }
 
@@ -102,7 +234,22 @@ export async function getServerSideProps() {
   const query = `*[_type == "head"]{
     id,
     name,
+    country,
+    flag{
+      'url': asset->url
+    },
+    headline,
+    subHeading,
+    'images': images[]->{
+      name,
+      'url': images.asset->url
+    },
     url,
+    bannerHeading,
+    bannerText,
+    bannerImage{
+      'url': asset->url
+    },
     'categories': categories[]->{
       name,
       label,
@@ -117,16 +264,24 @@ export async function getServerSideProps() {
         name,
         description,
         caption,
-        price,
-        currency,
         reference,
         'images': images[]->{
           name,
           description,
           'url': images.asset->url
       }
-    }}
-  }
+    }}},   
+    'favourites':favourites[]->{
+      name,
+        description,
+        caption,
+        reference,
+        'images': images[]->{
+          name,
+          description,
+          'url': images.asset->url
+      }
+    }
 }`
 
   // Get Sanity Data

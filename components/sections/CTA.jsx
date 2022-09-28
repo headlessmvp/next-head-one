@@ -1,7 +1,11 @@
 import Link from 'next/link'
 import React from 'react'
 
+
 export const CTA = () => {
+
+
+
     return (
         <section aria-labelledby="sale-heading">
             <div className="overflow-hidden pt-32 sm:pt-14">
@@ -15,7 +19,7 @@ export const CTA = () => {
                                     Up to 50% off.
                                 </h2>
                                 <div className="mt-6 text-base">
-                                    <Link href="/category/SALE" >
+                                    <Link href="/sale" >
                                         <span className="font-semibold text-white cursor-pointer">Shop the sale
                                             <span aria-hidden="true"> &rarr;</span></span>
                                     </Link>
