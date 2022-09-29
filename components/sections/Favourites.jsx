@@ -67,6 +67,9 @@ export const Favourites = () => {
                                 </Link>
                             </h3>
                             <p className="mt-1 text-sm text-gray-500">{favorite?.caption}</p>
+                            <p className="mt-1 text-lg font-medium text-gray-900">
+                                $20
+                            </p>
                         </div>
                     ))}
                 </div>
