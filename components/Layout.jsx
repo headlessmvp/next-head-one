@@ -422,7 +422,7 @@ export const Layout = ({ children }) => {
                                                 {/* Flyout menus */}
                                                 <Popover.Group className="hidden lg:ml-8 lg:block lg:self-stretch">
                                                     <div className="flex h-full space-x-8">
-                                                        {navigation.categories.map((category) => (
+                                                        {allData && allData?.categories && allData?.categories.map((category) => (
                                                             <Popover key={category.name} className="flex">
                                                                 {({ open }) => (
                                                                     <>
@@ -473,7 +473,7 @@ export const Layout = ({ children }) => {
                                                                                     <div className="mx-auto max-w-7xl px-8">
                                                                                         <div className="grid grid-cols-2 gap-y-10 gap-x-8 py-16">
                                                                                             <div className="col-start-2 grid grid-cols-2 gap-x-8">
-                                                                                                {category.featured.map(
+                                                                                                {/* {category.subCategories.map(
                                                                                                     (item) => (
                                                                                                         <div
                                                                                                             key={item.name}
@@ -481,21 +481,22 @@ export const Layout = ({ children }) => {
                                                                                                         >
                                                                                                             <div className="aspect-w-1 aspect-h-1 overflow-hidden rounded-lg bg-gray-100 group-hover:opacity-75">
                                                                                                                 <img
-                                                                                                                    src={item.imageSrc}
-                                                                                                                    alt={item.imageAlt}
+                                                                                                                    src={item.image.url}
+                                                                                                                    alt={item.name}
                                                                                                                     className="object-cover object-center"
                                                                                                                 />
                                                                                                             </div>
-                                                                                                            <a
-                                                                                                                href={item.href}
-                                                                                                                className="mt-6 block font-medium text-gray-900"
+                                                                                                            <Link
+                                                                                                                href={`/subCategories/${item.slug}`}
                                                                                                             >
-                                                                                                                <span
-                                                                                                                    className="absolute inset-0 z-10"
-                                                                                                                    aria-hidden="true"
-                                                                                                                />
-                                                                                                                {item.name}
-                                                                                                            </a>
+                                                                                                                <span className="mt-6 block font-medium text-gray-900"
+                                                                                                                > <span
+                                                                                                                        className="absolute inset-0 z-10"
+                                                                                                                        aria-hidden="true"
+                                                                                                                    />
+                                                                                                                    {item.name}</span>
+
+                                                                                                            </Link>
                                                                                                             <p
                                                                                                                 aria-hidden="true"
                                                                                                                 className="mt-1"
@@ -504,31 +505,31 @@ export const Layout = ({ children }) => {
                                                                                                             </p>
                                                                                                         </div>
                                                                                                     )
-                                                                                                )}
+                                                                                                )} */}
                                                                                             </div>
-                                                                                            <div className="row-start-1 grid grid-cols-3 gap-y-10 gap-x-8 text-sm">
-                                                                                                {category.sections.map(
-                                                                                                    (section) => (
-                                                                                                        <div key={section.name}>
+                                                                                            {/* <div className="row-start-1 grid grid-cols-3 gap-y-10 gap-x-8 text-sm">
+                                                                                                {category.subCategories.map(
+                                                                                                    (subCategory) => (
+                                                                                                        <div key={subCategory.slug}>
                                                                                                             <p
-                                                                                                                id={`${section.name}-heading`}
+                                                                                                                id={`${subCategory.slug}-heading`}
                                                                                                                 className="font-medium text-gray-900"
                                                                                                             >
-                                                                                                                {section.name}
+                                                                                                                {subCategory.name}
                                                                                                             </p>
                                                                                                             <ul
                                                                                                                 role="list"
-                                                                                                                aria-labelledby={`${section.name}-heading`}
+                                                                                                                aria-labelledby={`${subCategory.slug}-heading`}
                                                                                                                 className="mt-6 space-y-6 sm:mt-4 sm:space-y-4"
                                                                                                             >
-                                                                                                                {section.items.map(
+                                                                                                                {subCategory.products.map(
                                                                                                                     (item) => (
                                                                                                                         <li
                                                                                                                             key={item.name}
                                                                                                                             className="flex"
                                                                                                                         >
                                                                                                                             <a
-                                                                                                                                href={item.href}
+                                                                                                                                href={item.reference}
                                                                                                                                 className="hover:text-gray-800"
                                                                                                                             >
                                                                                                                                 {item.name}
@@ -540,7 +541,7 @@ export const Layout = ({ children }) => {
                                                                                                         </div>
                                                                                                     )
                                                                                                 )}
-                                                                                            </div>
+                                                                                            </div> */}
                                                                                         </div>
                                                                                     </div>
                                                                                 </div>

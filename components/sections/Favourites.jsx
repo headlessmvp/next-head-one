@@ -52,7 +52,7 @@ export const Favourites = () => {
 
                 <div className="mt-6 grid grid-cols-1 gap-y-10 sm:grid-cols-3 sm:gap-y-0 sm:gap-x-6 lg:gap-x-8">
                     {allData?.favourites?.map((favorite) => (
-                        <div key={favorite.id} className="group relative cursor-pointer">
+                        <div key={favorite.reference} className="group relative cursor-pointer">
                             <div className="h-96 w-full overflow-hidden rounded-lg group-hover:opacity-75 sm:aspect-w-2 sm:aspect-h-3 sm:h-auto">
                                 <img
                                     src={favorite?.images[0]?.url}
