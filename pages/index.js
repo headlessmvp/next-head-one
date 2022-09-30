@@ -15,21 +15,21 @@ import { CTA } from "../components/sections/CTA"
 import { Layout } from "../components/Layout"
 
 export default function Home({ data }) {
-  const { setProducts, setAllData, setSubCategories, allData } =
-    useContext(ProductContext)
+  const { setAllData, allData, setSubCategories } = useContext(ProductContext)
 
   useEffect(() => {
-    setSubCategories(data.categories[0].subCategories)
-    data.categories[0].subCategories.map((subCategory) => {
-      if (subCategory.name.search("all") !== -1) {
-        setProducts(subCategory.products)
-      }
-    })
-
     setAllData(data)
   }, [])
 
-  console.log("DATA: ", allData)
+  useEffect(() => {
+    let subCatTemp = []
+    data?.categories?.map((category) => {
+      category?.subCategories?.map((sub) => subCatTemp.push(sub))
+    })
+    setSubCategories(subCatTemp)
+  }, [allData])
+
+  console.log("INDEX : ", allData)
 
   return (
     <Layout>
@@ -88,8 +88,8 @@ export async function getServerSideProps() {
       slug,
       description,
       image{
-        'url': asset->url
-      },
+      'url': asset->url
+    },
       'products': products[]->{
         name,
         description,

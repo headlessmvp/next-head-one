@@ -88,7 +88,7 @@ export const Category = () => {
                                 <h3 className="font-semibold text-white">
                                     <a href="#">
                                         <span className="absolute inset-0" />
-                                        {allData?.categories[3]?.name}
+                                        {allData?.categories[2]?.name}
                                     </a>
                                 </h3>
                                 <p aria-hidden="true" className="mt-1 text-sm text-white">

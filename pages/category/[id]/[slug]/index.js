@@ -85,24 +85,26 @@ function classNames(...classes) {
 export default function SubCategory({ data }) {
   const router = useRouter()
 
-  const { setProducts, setAllData, setSubCategories, subCategories, allData } =
+  const { setAllData, setSubCategories, subCategories, allData } =
     useContext(ProductContext)
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false)
   const [subCategoryData, setSubCategoryData] = useState({})
 
   console.log("Router: ", router.query.slug)
-  useEffect(() => {
-    if (!allData?.id) {
-      setSubCategories(data.categories[0].subCategories)
-      data.categories[0].subCategories.map((subCategory) => {
-        if (subCategory.name.search("all") !== -1) {
-          setProducts(subCategory.products)
-        }
-      })
 
-      setAllData(data)
-    }
+  useEffect(() => {
+    setAllData(data)
   }, [])
+
+  useEffect(() => {
+    if (allData?.id) {
+      let subCatTemp = []
+      data?.categories?.map((category) => {
+        category?.subCategories?.map((sub) => subCatTemp.push(sub))
+      })
+      setSubCategories(subCatTemp)
+    }
+  }, [allData])
 
   useEffect(() => {
     if (subCategories?.length) {
@@ -113,7 +115,7 @@ export default function SubCategory({ data }) {
     }
   }, [subCategories])
 
-  console.log("DATA at Categories: ", subCategoryData)
+  console.log("SUB CATEGORY:  ", subCategoryData)
   return (
     <Layout>
       {/* Mobile filter dialog */}
@@ -241,7 +243,7 @@ export default function SubCategory({ data }) {
       <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex items-baseline justify-between border-b border-gray-200 pt-24 pb-6">
           <h1 className="text-4xl font-bold tracking-tight text-gray-900">
-            {subCategoryData && subCategoryData?.name && subCategoryData?.name}
+            {subCategoryData && subCategoryData?.name && subCategoryData?.label}
           </h1>
 
           <div className="flex items-center">

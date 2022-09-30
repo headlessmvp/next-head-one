@@ -29,6 +29,11 @@ import {
     ItemContainer,
     OrderContainer,
     OrderStorage,
+    LineItemsContainer,
+    LineItemsCount,
+    LineItem,
+    LineItemImage,
+    LineItemName, LineItemQuantity, LineItemAmount, LineItemRemoveLink, TotalAmount, CheckoutLink
 } from "@commercelayer/react-components"
 
 // Components
@@ -180,7 +185,6 @@ export const Layout = ({ children }) => {
         setOrigin(location.origin)
     }, [])
 
-    console.log("DATA: ", allData)
 
     return (
         <CommerceLayer
@@ -196,6 +200,7 @@ export const Layout = ({ children }) => {
                     }}
                 >
                     <ItemContainer>
+
                         <div className={styles.container}>
                             <Head>
                                 <title>Head 01</title>
@@ -390,7 +395,7 @@ export const Layout = ({ children }) => {
                                     </Dialog>
                                 </Transition.Root>
 
-                                <header className="relative overflow-hidden">
+                                <header className="relative">
                                     {/* Top navigation */}
                                     <nav
                                         aria-label="Top"
@@ -419,10 +424,10 @@ export const Layout = ({ children }) => {
                                                 </div>
 
                                                 {/* Flyout menus */}
-                                                <Popover.Group className="hidden lg:ml-8 lg:block lg:self-stretch">
-                                                    <div className="flex h-full space-x-8">
+                                                <Popover.Group className="hidden lg:ml-8 lg:block lg:self-stretch z-30">
+                                                    <div className="flex h-full space-x-8 z-30">
                                                         {allData && allData?.categories && allData?.categories.map((category) => (
-                                                            <Popover key={category.name} className="flex">
+                                                            <Popover key={category.name} className="flex z-30">
                                                                 {({ open }) => (
                                                                     <>
                                                                         <div className="relative flex">
@@ -447,7 +452,7 @@ export const Layout = ({ children }) => {
                                                                             leaveFrom="opacity-100"
                                                                             leaveTo="opacity-0"
                                                                         >
-                                                                            <Popover.Panel className="absolute inset-x-0 top-full bg-white text-sm text-gray-500">
+                                                                            <Popover.Panel className="absolute inset-x-0 top-full bg-white text-sm text-gray-500 z-30">
                                                                                 {/* Presentational element used to render the bottom shadow, if we put the shadow on the actual panel it pokes out the top, so we use this shorter element to hide the top of the shadow */}
                                                                                 <div
                                                                                     className="absolute inset-0 top-1/2 bg-white shadow"
@@ -472,16 +477,16 @@ export const Layout = ({ children }) => {
                                                                                     <div className="mx-auto max-w-7xl px-8">
                                                                                         <div className="grid grid-cols-2 gap-y-10 gap-x-8 py-16">
                                                                                             <div className="col-start-2 grid grid-cols-2 gap-x-8">
-                                                                                                {/* {category.subCategories.map(
+                                                                                                {category?.subCategories?.map(
                                                                                                     (item) => (
                                                                                                         <div
-                                                                                                            key={item.name}
+                                                                                                            key={item?.name}
                                                                                                             className="group relative text-base sm:text-sm"
                                                                                                         >
                                                                                                             <div className="aspect-w-1 aspect-h-1 overflow-hidden rounded-lg bg-gray-100 group-hover:opacity-75">
                                                                                                                 <img
-                                                                                                                    src={item.image.url}
-                                                                                                                    alt={item.name}
+                                                                                                                    src={item?.image?.url}
+                                                                                                                    alt={item?.name}
                                                                                                                     className="object-cover object-center"
                                                                                                                 />
                                                                                                             </div>
@@ -493,7 +498,7 @@ export const Layout = ({ children }) => {
                                                                                                                         className="absolute inset-0 z-10"
                                                                                                                         aria-hidden="true"
                                                                                                                     />
-                                                                                                                    {item.name}</span>
+                                                                                                                    {item?.name}</span>
 
                                                                                                             </Link>
                                                                                                             <p
@@ -504,34 +509,34 @@ export const Layout = ({ children }) => {
                                                                                                             </p>
                                                                                                         </div>
                                                                                                     )
-                                                                                                )} */}
+                                                                                                )}
                                                                                             </div>
-                                                                                            {/* <div className="row-start-1 grid grid-cols-3 gap-y-10 gap-x-8 text-sm">
-                                                                                                {category.subCategories.map(
+                                                                                            <div className="row-start-1 grid grid-cols-3 gap-y-10 gap-x-8 text-sm">
+                                                                                                {category?.subCategories?.map(
                                                                                                     (subCategory) => (
-                                                                                                        <div key={subCategory.slug}>
+                                                                                                        <div key={subCategory?.slug}>
                                                                                                             <p
                                                                                                                 id={`${subCategory.slug}-heading`}
                                                                                                                 className="font-medium text-gray-900"
                                                                                                             >
-                                                                                                                {subCategory.name}
+                                                                                                                {subCategory?.label}
                                                                                                             </p>
                                                                                                             <ul
                                                                                                                 role="list"
-                                                                                                                aria-labelledby={`${subCategory.slug}-heading`}
+                                                                                                                aria-labelledby={`${subCategory?.slug}-heading`}
                                                                                                                 className="mt-6 space-y-6 sm:mt-4 sm:space-y-4"
                                                                                                             >
-                                                                                                                {subCategory.products.map(
+                                                                                                                {subCategory?.products.map(
                                                                                                                     (item) => (
                                                                                                                         <li
-                                                                                                                            key={item.name}
+                                                                                                                            key={item?.name}
                                                                                                                             className="flex"
                                                                                                                         >
                                                                                                                             <a
-                                                                                                                                href={item.reference}
+                                                                                                                                href={item?.reference}
                                                                                                                                 className="hover:text-gray-800"
                                                                                                                             >
-                                                                                                                                {item.name}
+                                                                                                                                {item?.name}
                                                                                                                             </a>
                                                                                                                         </li>
                                                                                                                     )
@@ -540,7 +545,7 @@ export const Layout = ({ children }) => {
                                                                                                         </div>
                                                                                                     )
                                                                                                 )}
-                                                                                            </div> */}
+                                                                                            </div>
                                                                                         </div>
                                                                                     </div>
                                                                                 </div>
@@ -564,6 +569,8 @@ export const Layout = ({ children }) => {
                                                 </Popover.Group>
 
                                                 <div className="ml-auto flex items-center">
+
+                                                    {/* Forms */}
                                                     <div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
                                                         <Link href="/login">
                                                             <span className="text-sm cursor-pointer font-medium text-gray-700 hover:text-gray-800">
@@ -583,6 +590,7 @@ export const Layout = ({ children }) => {
                                                         </Link>
                                                     </div>
 
+                                                    {/* Country */}
                                                     <div className="hidden lg:ml-8 lg:flex">
                                                         <a
                                                             href="#"
@@ -617,24 +625,62 @@ export const Layout = ({ children }) => {
                                                         </a>
                                                     </div>
 
-                                                    {/* Cart */}
-                                                    <div className="ml-4 flow-root lg:ml-6">
-                                                        <a
-                                                            href="#"
-                                                            className="group -m-2 flex items-center p-2"
-                                                        >
+                                                    {/* Shopping Cart */}
+                                                    <Popover className="ml-4 flow-root text-sm lg:relative lg:ml-8 z-50">
+                                                        <Popover.Button className="group -m-2 flex items-center p-2">
                                                             <ShoppingBagIcon
                                                                 className="h-6 w-6 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
                                                                 aria-hidden="true"
                                                             />
-                                                            <span className="ml-2 text-sm font-medium text-gray-700 group-hover:text-gray-800">
-                                                                0
-                                                            </span>
-                                                            <span className="sr-only">
-                                                                items in cart, view bag
-                                                            </span>
-                                                        </a>
-                                                    </div>
+                                                            <span className="ml-2 text-sm font-medium text-gray-700 group-hover:text-gray-800"><LineItemsCount /></span>
+                                                            <span className="sr-only">items in cart, view bag</span>
+                                                        </Popover.Button>
+                                                        <Transition
+                                                            as={Fragment}
+                                                            enter="transition ease-out duration-200"
+                                                            enterFrom="opacity-0"
+                                                            enterTo="opacity-100"
+                                                            leave="transition ease-in duration-150"
+                                                            leaveFrom="opacity-100"
+                                                            leaveTo="opacity-0"
+                                                        >
+                                                            <Popover.Panel className="absolute inset-x-0 top-16 mt-px bg-white pb-6 shadow-lg sm:px-2 lg:top-full lg:left-auto lg:right-0 lg:mt-3 lg:-mr-1.5 lg:w-80 lg:rounded-lg lg:ring-1 lg:ring-black lg:ring-opacity-5">
+                                                                <h2 className="sr-only">Shopping Cart</h2>
+
+                                                                <form className="mx-auto max-w-2xl px-4">
+
+                                                                    <ul role="list" className="divide-y divide-gray-200">
+                                                                        <LineItem>
+                                                                            <div className="flex items-center py-6">
+
+                                                                                <LineItemImage className="h-16 w-16 flex-none rounded-md border border-gray-200"
+                                                                                    width={50} />
+                                                                                <div className="ml-4 flex-auto">
+                                                                                    <h3 className="font-medium text-gray-900">
+                                                                                        <LineItemName />
+                                                                                    </h3>
+                                                                                    <LineItemQuantity max={10} className="block mt-1 text-xs py-1" />
+                                                                                    {/* <Errors resource="lineItem" field="quantity" /> */}
+                                                                                    <LineItemAmount />
+                                                                                    <LineItemRemoveLink className='text-red-400 cursor-pointer text-xs block' />
+                                                                                </div>
+                                                                            </div>
+                                                                        </LineItem>
+
+
+                                                                    </ul>
+
+
+                                                                    <p className="text-base">Total: <TotalAmount className="text-base" /></p>
+                                                                    <CheckoutLink
+                                                                        type="submit"
+                                                                        className="w-full rounded-md border border-transparent bg-indigo-600 mt-6 py-2 px-4 text-center text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-50"
+                                                                    />
+
+                                                                </form>
+                                                            </Popover.Panel>
+                                                        </Transition>
+                                                    </Popover>
                                                 </div>
                                             </div>
                                         </div>
