@@ -26,7 +26,6 @@ import { ProductContext } from "../context/ProductContext"
 // Commerce Layer
 import {
     CommerceLayer,
-    ItemContainer,
     OrderContainer,
     OrderStorage,
     LineItemsContainer,
@@ -198,8 +197,8 @@ export const Layout = ({ children }) => {
                         return_url: `${origin}`,
                         privacy_url: `${origin}`,
                     }}
-                >
-                    <ItemContainer>
+                >                                                                    <LineItemsContainer>
+
 
                         <div className={styles.container}>
                             <Head>
@@ -647,37 +646,40 @@ export const Layout = ({ children }) => {
                                                             <Popover.Panel className="absolute inset-x-0 top-16 mt-px bg-white pb-6 shadow-lg sm:px-2 lg:top-full lg:left-auto lg:right-0 lg:mt-3 lg:-mr-1.5 lg:w-80 lg:rounded-lg lg:ring-1 lg:ring-black lg:ring-opacity-5">
                                                                 <h2 className="sr-only">Shopping Cart</h2>
 
-                                                                <form className="mx-auto max-w-2xl px-4">
+                                                                <div className="mx-auto max-w-2xl px-4">
 
                                                                     <ul role="list" className="divide-y divide-gray-200">
-                                                                        <LineItem>
-                                                                            <div className="flex items-center py-6">
 
-                                                                                <LineItemImage className="h-16 w-16 flex-none rounded-md border border-gray-200"
-                                                                                    width={50} />
-                                                                                <div className="ml-4 flex-auto">
-                                                                                    <h3 className="font-medium text-gray-900">
-                                                                                        <LineItemName />
-                                                                                    </h3>
-                                                                                    <LineItemQuantity max={10} className="block mt-1 text-xs py-1" />
-                                                                                    {/* <Errors resource="lineItem" field="quantity" /> */}
-                                                                                    <LineItemAmount />
-                                                                                    <LineItemRemoveLink className='text-red-400 cursor-pointer text-xs block' />
+
+                                                                        <LineItemsContainer>
+                                                                            <LineItem>
+                                                                                <div className="flex items-center py-6">
+
+                                                                                    <LineItemImage className="h-16 w-16 flex-none rounded-md border border-gray-200"
+                                                                                        width={50} />
+                                                                                    <div className="ml-4 flex-auto">
+                                                                                        <h3 className="font-medium text-gray-900">
+                                                                                            <LineItemName />
+                                                                                        </h3>
+                                                                                        <LineItemQuantity max={10} className="block mt-1 text-xs py-1" />
+                                                                                        {/* <Errors resource="lineItem" field="quantity" /> */}
+                                                                                        <LineItemAmount />
+                                                                                        <LineItemRemoveLink className='text-red-400 cursor-pointer text-xs block' />
+                                                                                    </div>
                                                                                 </div>
-                                                                            </div>
-                                                                        </LineItem>
+                                                                            </LineItem></LineItemsContainer>
 
 
                                                                     </ul>
 
 
-                                                                    <p className="text-base">Total: <TotalAmount className="text-base" /></p>
+                                                                    <p className="text-base">Total: <LineItemsContainer><TotalAmount className="text-base" /></LineItemsContainer></p>
                                                                     <CheckoutLink
                                                                         type="submit"
                                                                         className="w-full rounded-md border border-transparent bg-indigo-600 mt-6 py-2 px-4 text-center text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-50"
                                                                     />
 
-                                                                </form>
+                                                                </div>
                                                             </Popover.Panel>
                                                         </Transition>
                                                     </Popover>
@@ -694,8 +696,7 @@ export const Layout = ({ children }) => {
                                 <Footer />
                             </div>
 
-                        </div>
-                    </ItemContainer>
+                        </div></LineItemsContainer>
                 </OrderContainer>
             </OrderStorage>
         </CommerceLayer>
