@@ -111,6 +111,28 @@ export async function getServerSideProps() {
           description,
           'url': images.asset->url
       }
+    },
+    'sale':sale[]->{
+      name,
+        description,
+        caption,
+        reference,
+        'images': images[]->{
+          name,
+          description,
+          'url': images.asset->url
+      }
+    },
+    'collection':collection[]->{
+      name,
+        description,
+        caption,
+        reference,
+        'images': images[]->{
+          name,
+          description,
+          'url': images.asset->url
+      }
     }
 }`
 

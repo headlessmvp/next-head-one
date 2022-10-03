@@ -1,98 +1,20 @@
-/*
-  This example requires Tailwind CSS v2.0+ 
-  
-  This example requires some changes to your config:
-  
-  ```
-  // tailwind.config.js
-  module.exports = {
-    // ...
-    plugins: [
-      // ...
-      require('@tailwindcss/forms'),
-      require('@tailwindcss/aspect-ratio'),
-    ],
-  }
-  ```
-*/
-import { Fragment, useState } from "react"
-import {
-  Dialog,
-  Disclosure,
-  Menu,
-  Popover,
-  Tab,
-  Transition,
-} from "@headlessui/react"
-import {
-  Bars3Icon,
-  MagnifyingGlassIcon,
-  ShoppingBagIcon,
-  XMarkIcon,
-} from "@heroicons/react/24/outline"
-import {
-  ChevronDownIcon,
-  FunnelIcon,
-  MinusIcon,
-  PlusIcon,
-  Squares2X2Icon,
-} from "@heroicons/react/20/solid"
+import { useContext, useEffect } from "react"
+
+// Icons
+import { Squares2X2Icon } from "@heroicons/react/20/solid"
+
+// Next
 import Link from "next/link"
 
 // Components
 import { Layout } from "../components/Layout"
 
-const sortOptions = [
-  { name: "Most Popular", href: "#", current: true },
-  { name: "Best Rating", href: "#", current: false },
-  { name: "Newest", href: "#", current: false },
-  { name: "Price: Low to High", href: "#", current: false },
-  { name: "Price: High to Low", href: "#", current: false },
-]
-const subCategories = [
-  { name: "Totes", href: "#" },
-  { name: "Backpacks", href: "#" },
-  { name: "Travel Bags", href: "#" },
-  { name: "Hip Bags", href: "#" },
-  { name: "Laptop Sleeves", href: "#" },
-]
-const filters = [
-  {
-    id: "color",
-    name: "Color",
-    options: [
-      { value: "white", label: "White", checked: false },
-      { value: "beige", label: "Beige", checked: false },
-      { value: "blue", label: "Blue", checked: true },
-      { value: "brown", label: "Brown", checked: false },
-      { value: "green", label: "Green", checked: false },
-      { value: "purple", label: "Purple", checked: false },
-    ],
-  },
-  {
-    id: "category",
-    name: "Category",
-    options: [
-      { value: "new-arrivals", label: "New Arrivals", checked: false },
-      { value: "sale", label: "Sale", checked: false },
-      { value: "travel", label: "Travel", checked: true },
-      { value: "organization", label: "Organization", checked: false },
-      { value: "accessories", label: "Accessories", checked: false },
-    ],
-  },
-  {
-    id: "size",
-    name: "Size",
-    options: [
-      { value: "2l", label: "2L", checked: false },
-      { value: "6l", label: "6L", checked: false },
-      { value: "12l", label: "12L", checked: false },
-      { value: "18l", label: "18L", checked: false },
-      { value: "20l", label: "20L", checked: false },
-      { value: "40l", label: "40L", checked: true },
-    ],
-  },
-]
+// Context
+import { ProductContext } from "../context/ProductContext"
+
+// Sanity
+import { client } from "../lib/client"
+
 const products = [
   {
     id: 1,
@@ -119,12 +41,22 @@ const products = [
   // More products...
 ]
 
-function classNames(...classes) {
-  return classes.filter(Boolean).join(" ")
-}
+export default function Categories({ data }) {
+  const { setAllData, allData, setSubCategories } = useContext(ProductContext)
 
-export default function Example() {
-  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false)
+  useEffect(() => {
+    setAllData(data)
+  }, [])
+
+  useEffect(() => {
+    let subCatTemp = []
+    data?.categories?.map((category) => {
+      category?.subCategories?.map((sub) => subCatTemp.push(sub))
+    })
+    setSubCategories(subCatTemp)
+  }, [allData])
+
+  console.log("CATEGORIES : ", allData)
 
   return (
     <Layout>
@@ -153,26 +85,25 @@ export default function Example() {
 
             <div className="grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-4">
               {/* Product grid */}
-              <div className="grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:col-span-3 lg:gap-x-8">
-                {products.map((product) => (
-                  <Link key={product.id} href="/product/PURSE01">
+              <div className="grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-3 lg:col-span-4 lg:gap-x-8">
+                {allData?.categories?.map((category) => (
+                  <Link
+                    key={category.name}
+                    href={`/category/${category?.slug}`}
+                  >
                     <div className="group text-sm cursor-pointer">
-                      {" "}
                       <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-lg bg-gray-100 group-hover:opacity-75">
                         <img
-                          src={product.imageSrc}
-                          alt={product.imageAlt}
+                          src={category?.image?.url}
+                          alt={category?.name}
                           className="h-full w-full object-cover object-center"
                         />
                       </div>
                       <h3 className="mt-4 font-medium text-gray-900">
-                        {product.name}
+                        {category?.label}
                       </h3>
                       <p className="italic text-gray-500">
-                        {product.availability}
-                      </p>
-                      <p className="mt-2 font-medium text-gray-900">
-                        {product.price}
+                        {category?.description}
                       </p>
                     </div>
                   </Link>
@@ -184,4 +115,105 @@ export default function Example() {
       </div>
     </Layout>
   )
+}
+
+export async function getServerSideProps() {
+  const query = `*[_type == "head"]{
+    id,
+    name,
+    country,
+    flag{
+      'url': asset->url
+    },
+    headline,
+    subHeading,
+    'images': images[]->{
+      name,
+      'url': images.asset->url
+    },
+    url,
+    bannerHeading,
+    bannerText,
+    saleText,
+    bannerImage{
+      'url': asset->url
+    },
+    'categories': categories[]->{
+      name,
+      label,
+      slug,
+      description,
+      image{
+        'url': asset->url
+      },
+    'subCategories': subCategories[]->{
+      name,
+      label,
+      slug,
+      description,
+      image{
+      'url': asset->url
+    },
+      'products': products[]->{
+        name,
+        description,
+        caption,
+        reference,
+        'images': images[]->{
+          name,
+          description,
+          'url': images.asset->url
+      }
+    }}},   
+    'favourites':favourites[]->{
+      name,
+        description,
+        caption,
+        reference,
+        'images': images[]->{
+          name,
+          description,
+          'url': images.asset->url
+      }
+    },
+    'sale':sale[]->{
+      name,
+        description,
+        caption,
+        reference,
+        'images': images[]->{
+          name,
+          description,
+          'url': images.asset->url
+      }
+    },
+    'collection':collection[]->{
+      name,
+        description,
+        caption,
+        reference,
+        'images': images[]->{
+          name,
+          description,
+          'url': images.asset->url
+      }
+    }
+}`
+
+  // Get Sanity Data
+  const heads = await client.fetch(query)
+
+  let filtered = {}
+
+  if (heads.length > 0) {
+    filtered = heads.filter(
+      (head) => head.id === process.env.NEXT_PUBLIC_HEAD_ID
+    )
+  }
+
+  return {
+    props: {
+      data: filtered[0],
+    },
+  }
 }
