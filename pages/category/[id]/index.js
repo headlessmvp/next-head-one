@@ -156,6 +156,13 @@ export async function getServerSideProps() {
         description,
         caption,
         reference,
+        'colors': colors[]->{
+          name,
+          code,
+        },         
+        'sizes': sizes[]->{
+          name,
+        },
         'images': images[]->{
           name,
           description,

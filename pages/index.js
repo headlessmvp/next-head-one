@@ -88,13 +88,20 @@ export async function getServerSideProps() {
       slug,
       description,
       image{
-      'url': asset->url
-    },
+        'url': asset->url
+      },
       'products': products[]->{
         name,
         description,
         caption,
         reference,
+        'colors': colors[]->{
+          name,
+          code,
+        },         
+        'sizes': sizes[]->{
+          name,
+        },
         'images': images[]->{
           name,
           description,
@@ -102,28 +109,6 @@ export async function getServerSideProps() {
       }
     }}},   
     'favourites':favourites[]->{
-      name,
-        description,
-        caption,
-        reference,
-        'images': images[]->{
-          name,
-          description,
-          'url': images.asset->url
-      }
-    },
-    'sale':sale[]->{
-      name,
-        description,
-        caption,
-        reference,
-        'images': images[]->{
-          name,
-          description,
-          'url': images.asset->url
-      }
-    },
-    'collection':collection[]->{
       name,
         description,
         caption,
