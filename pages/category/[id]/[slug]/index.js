@@ -33,50 +33,6 @@ const sortOptions = [
   { name: "Price: Low to High", href: "#", current: false },
   { name: "Price: High to Low", href: "#", current: false },
 ]
-const subCategories = [
-  { name: "Totes", href: "#" },
-  { name: "Backpacks", href: "#" },
-  { name: "Travel Bags", href: "#" },
-  { name: "Hip Bags", href: "#" },
-  { name: "Laptop Sleeves", href: "#" },
-]
-const filters = [
-  {
-    id: "color",
-    name: "Color",
-    options: [
-      { value: "white", label: "White", checked: false },
-      { value: "beige", label: "Beige", checked: false },
-      { value: "blue", label: "Blue", checked: true },
-      { value: "brown", label: "Brown", checked: false },
-      { value: "green", label: "Green", checked: false },
-      { value: "purple", label: "Purple", checked: false },
-    ],
-  },
-  {
-    id: "category",
-    name: "Category",
-    options: [
-      { value: "new-arrivals", label: "New Arrivals", checked: false },
-      { value: "sale", label: "Sale", checked: false },
-      { value: "travel", label: "Travel", checked: true },
-      { value: "organization", label: "Organization", checked: false },
-      { value: "accessories", label: "Accessories", checked: false },
-    ],
-  },
-  {
-    id: "size",
-    name: "Size",
-    options: [
-      { value: "2l", label: "2L", checked: false },
-      { value: "6l", label: "6L", checked: false },
-      { value: "12l", label: "12L", checked: false },
-      { value: "18l", label: "18L", checked: false },
-      { value: "20l", label: "20L", checked: false },
-      { value: "40l", label: "40L", checked: true },
-    ],
-  },
-]
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ")
@@ -89,6 +45,8 @@ export default function SubCategory({ data }) {
     useContext(ProductContext)
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false)
   const [subCategoryData, setSubCategoryData] = useState({})
+  const [colors, setColors] = useState([])
+  const [sizes, setSizes] = useState([])
 
   console.log("Router: ", router.query.slug)
 
@@ -115,7 +73,52 @@ export default function SubCategory({ data }) {
     }
   }, [subCategories])
 
+  useEffect(() => {
+    let tempColors = []
+    if (subCategoryData?.name) {
+      subCategoryData?.products?.map((product) => {
+        tempColors.push(...product?.colors)
+      })
+
+      const arrayUniqueByKey = [
+        ...new Map(tempColors.map((item) => [item["name"], item])).values(),
+      ]
+
+      let colorsWithCheck = []
+      arrayUniqueByKey?.map((item) =>
+        colorsWithCheck.push({ ...item, checked: false })
+      )
+      setColors(colorsWithCheck)
+    }
+  }, [subCategoryData])
+
+  useEffect(() => {
+    let tempSizes = []
+    if (subCategoryData?.name) {
+      subCategoryData?.products?.map((product) => {
+        tempSizes.push(...product?.sizes)
+      })
+
+      const arrayUniqueByKey = [
+        ...new Map(tempSizes.map((item) => [item["name"], item])).values(),
+      ]
+
+      let sizesWithCheck = []
+      arrayUniqueByKey?.map((item) =>
+        sizesWithCheck.push({ ...item, checked: false })
+      )
+      setSizes(sizesWithCheck)
+    }
+  }, [subCategoryData])
+
   console.log("SUB CATEGORY:  ", subCategoryData)
+  console.log("COLORS", colors)
+  console.log("SIZES", sizes)
+
+  useEffect(() => {
+    console.log("CHANGED")
+  }, [colors])
+
   return (
     <Layout>
       {/* Mobile filter dialog */}
@@ -162,24 +165,10 @@ export default function SubCategory({ data }) {
 
                 {/* Filters */}
                 <form className="mt-4 border-t border-gray-200">
-                  <h3 className="sr-only">Categories</h3>
-                  <ul
-                    role="list"
-                    className="px-2 py-3 font-medium text-gray-900"
-                  >
-                    {subCategories.map((category) => (
-                      <li key={category.name}>
-                        <a href={category.href} className="block px-2 py-3">
-                          {category.name}
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
-
-                  {filters.map((section) => (
+                  {/* Colors */}
+                  {subCategoryData && subCategoryData?.name && colors?.length && (
                     <Disclosure
                       as="div"
-                      key={section.id}
                       className="border-t border-gray-200 px-4 py-6"
                     >
                       {({ open }) => (
@@ -187,7 +176,7 @@ export default function SubCategory({ data }) {
                           <h3 className="-mx-2 -my-3 flow-root">
                             <Disclosure.Button className="flex w-full items-center justify-between bg-white px-2 py-3 text-gray-400 hover:text-gray-500">
                               <span className="font-medium text-gray-900">
-                                {section.name}
+                                Colors
                               </span>
                               <span className="ml-6 flex items-center">
                                 {open ? (
@@ -206,24 +195,24 @@ export default function SubCategory({ data }) {
                           </h3>
                           <Disclosure.Panel className="pt-6">
                             <div className="space-y-6">
-                              {section.options.map((option, optionIdx) => (
+                              {colors?.map((color) => (
                                 <div
-                                  key={option.value}
+                                  key={color.value}
                                   className="flex items-center"
                                 >
                                   <input
-                                    id={`filter-mobile-${section.id}-${optionIdx}`}
-                                    name={`${section.id}[]`}
-                                    defaultValue={option.value}
+                                    id={`filter-mobile-${color.name}`}
+                                    name={`${color.name}[]`}
+                                    defaultValue={color.name}
                                     type="checkbox"
-                                    defaultChecked={option.checked}
+                                    defaultChecked={color.checked}
                                     className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
                                   />
                                   <label
-                                    htmlFor={`filter-mobile-${section.id}-${optionIdx}`}
+                                    htmlFor={`filter-mobile-${color.name}`}
                                     className="ml-3 min-w-0 flex-1 text-gray-500"
                                   >
-                                    {option.label}
+                                    {color.name}
                                   </label>
                                 </div>
                               ))}
@@ -232,7 +221,62 @@ export default function SubCategory({ data }) {
                         </>
                       )}
                     </Disclosure>
-                  ))}
+                  )}
+
+                  {/* Sizes */}
+                  {subCategoryData && subCategoryData?.name && colors?.length && (
+                    <Disclosure
+                      as="div"
+                      className="border-t border-gray-200 px-4 py-6"
+                    >
+                      {({ open }) => (
+                        <>
+                          <h3 className="-mx-2 -my-3 flow-root">
+                            <Disclosure.Button className="flex w-full items-center justify-between bg-white px-2 py-3 text-gray-400 hover:text-gray-500">
+                              <span className="font-medium text-gray-900">
+                                Sizes
+                              </span>
+                              <span className="ml-6 flex items-center">
+                                {open ? (
+                                  <MinusIcon
+                                    className="h-5 w-5"
+                                    aria-hidden="true"
+                                  />
+                                ) : (
+                                  <PlusIcon
+                                    className="h-5 w-5"
+                                    aria-hidden="true"
+                                  />
+                                )}
+                              </span>
+                            </Disclosure.Button>
+                          </h3>
+                          <Disclosure.Panel className="pt-6">
+                            <div className="space-y-6">
+                              {sizes?.map(({ name, checked }) => (
+                                <div key={name} className="flex items-center">
+                                  <input
+                                    id={`filter-mobile-${name}`}
+                                    name={`${name}[]`}
+                                    defaultValue={name}
+                                    type="checkbox"
+                                    defaultChecked={checked}
+                                    className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                                  />
+                                  <label
+                                    htmlFor={`filter-mobile-${name}`}
+                                    className="ml-3 min-w-0 flex-1 text-gray-500"
+                                  >
+                                    {name}
+                                  </label>
+                                </div>
+                              ))}
+                            </div>
+                          </Disclosure.Panel>
+                        </>
+                      )}
+                    </Disclosure>
+                  )}
                 </form>
               </Dialog.Panel>
             </Transition.Child>
@@ -318,30 +362,15 @@ export default function SubCategory({ data }) {
           <div className="grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-4">
             {/* Filters */}
             <form className="hidden lg:block">
-              <h3 className="sr-only">Categories</h3>
-              <ul
-                role="list"
-                className="space-y-4 border-b border-gray-200 pb-6 text-sm font-medium text-gray-900"
-              >
-                {subCategories.map((category) => (
-                  <li key={category.name}>
-                    <a href={category.href}>{category.name}</a>
-                  </li>
-                ))}
-              </ul>
-
-              {filters.map((section) => (
-                <Disclosure
-                  as="div"
-                  key={section.id}
-                  className="border-b border-gray-200 py-6"
-                >
+              {/* Colors */}
+              {subCategoryData && subCategoryData?.name && colors?.length && (
+                <Disclosure as="div" className="border-b border-gray-200 py-6">
                   {({ open }) => (
                     <>
                       <h3 className="-my-3 flow-root">
                         <Disclosure.Button className="flex w-full items-center justify-between bg-white py-3 text-sm text-gray-400 hover:text-gray-500">
                           <span className="font-medium text-gray-900">
-                            {section.name}
+                            Colors
                           </span>
                           <span className="ml-6 flex items-center">
                             {open ? (
@@ -360,24 +389,36 @@ export default function SubCategory({ data }) {
                       </h3>
                       <Disclosure.Panel className="pt-6">
                         <div className="space-y-4">
-                          {section.options.map((option, optionIdx) => (
-                            <div
-                              key={option.value}
-                              className="flex items-center"
-                            >
+                          {colors?.map((color, index) => (
+                            <div key={color.code} className="flex items-center">
                               <input
-                                id={`filter-${section.id}-${optionIdx}`}
-                                name={`${section.id}[]`}
-                                defaultValue={option.value}
+                                id={`filter-${color.name}`}
+                                name={`${color.name}[]`}
                                 type="checkbox"
-                                defaultChecked={option.checked}
+                                value={color?.checked}
+                                onChange={() => {
+                                  let filtered = colors?.filter(
+                                    (item) => item.name === color.name
+                                  )
+
+                                  let changed = {
+                                    ...filtered[0],
+                                    checked: !filtered[0].checked,
+                                  }
+
+                                  let others = colors?.filter(
+                                    (item) => item.name !== color.name
+                                  )
+
+                                  setColors([changed, ...others])
+                                }}
                                 className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
                               />
                               <label
-                                htmlFor={`filter-${section.id}-${optionIdx}`}
+                                htmlFor={`filter-${color.name}`}
                                 className="ml-3 text-sm text-gray-600"
                               >
-                                {option.label}
+                                {color.name}
                               </label>
                             </div>
                           ))}
@@ -386,7 +427,59 @@ export default function SubCategory({ data }) {
                     </>
                   )}
                 </Disclosure>
-              ))}
+              )}
+
+              {/* Sizes */}
+              {subCategoryData && subCategoryData?.name && sizes?.length && (
+                <Disclosure as="div" className="border-b border-gray-200 py-6">
+                  {({ open }) => (
+                    <>
+                      <h3 className="-my-3 flow-root">
+                        <Disclosure.Button className="flex w-full items-center justify-between bg-white py-3 text-sm text-gray-400 hover:text-gray-500">
+                          <span className="font-medium text-gray-900">
+                            Sizes
+                          </span>
+                          <span className="ml-6 flex items-center">
+                            {open ? (
+                              <MinusIcon
+                                className="h-5 w-5"
+                                aria-hidden="true"
+                              />
+                            ) : (
+                              <PlusIcon
+                                className="h-5 w-5"
+                                aria-hidden="true"
+                              />
+                            )}
+                          </span>
+                        </Disclosure.Button>
+                      </h3>
+                      <Disclosure.Panel className="pt-6">
+                        <div className="space-y-4">
+                          {sizes?.map(({ name, checked }) => (
+                            <div key={name} className="flex items-center">
+                              <input
+                                id={`filter-${name}`}
+                                name={`${name}[]`}
+                                defaultValue={name}
+                                type="checkbox"
+                                defaultChecked={checked}
+                                className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                              />
+                              <label
+                                htmlFor={`filter-${name}`}
+                                className="ml-3 text-sm text-gray-600"
+                              >
+                                {name}
+                              </label>
+                            </div>
+                          ))}
+                        </div>
+                      </Disclosure.Panel>
+                    </>
+                  )}
+                </Disclosure>
+              )}
             </form>
 
             {/* Product grid */}
@@ -465,6 +558,13 @@ export async function getServerSideProps() {
         description,
         caption,
         reference,
+        'colors': colors[]->{
+          name,
+          code,
+        },         
+        'sizes': sizes[]->{
+          name,
+        },
         'images': images[]->{
           name,
           description,
