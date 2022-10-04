@@ -115,6 +115,8 @@ function classNames(...classes) {
 export default function Sale({ data }) {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false)
   const { setAllData, allData, setSubCategories } = useContext(ProductContext)
+  const [colors, setColors] = useState([])
+  const [sizes, setSizes] = useState([])
 
   useEffect(() => {
     setAllData(data)
@@ -127,6 +129,45 @@ export default function Sale({ data }) {
     })
     setSubCategories(subCatTemp)
   }, [allData])
+
+  useEffect(() => {
+    let tempColors = []
+    if (allData?.sale) {
+      console.log("MAP")
+      allData?.sale?.map((product) => {
+        tempColors.push(...product?.colors)
+      })
+
+      const arrayUniqueByKey = [
+        ...new Map(tempColors.map((item) => [item["name"], item])).values(),
+      ]
+
+      let colorsWithCheck = []
+      arrayUniqueByKey?.map((item) =>
+        colorsWithCheck.push({ ...item, checked: false })
+      )
+      setColors(colorsWithCheck)
+    }
+  }, [allData?.sale])
+
+  useEffect(() => {
+    let tempSizes = []
+    if (allData?.sale) {
+      allData?.sale?.map((product) => {
+        tempSizes.push(...product?.sizes)
+      })
+
+      const arrayUniqueByKey = [
+        ...new Map(tempSizes.map((item) => [item["name"], item])).values(),
+      ]
+
+      let sizesWithCheck = []
+      arrayUniqueByKey?.map((item) =>
+        sizesWithCheck.push({ ...item, checked: false })
+      )
+      setSizes(sizesWithCheck)
+    }
+  }, [allData?.sale])
 
   console.log("SALE : ", allData)
 
@@ -180,24 +221,10 @@ export default function Sale({ data }) {
 
                     {/* Filters */}
                     <form className="mt-4 border-t border-gray-200">
-                      <h3 className="sr-only">Categories</h3>
-                      <ul
-                        role="list"
-                        className="px-2 py-3 font-medium text-gray-900"
-                      >
-                        {subCategories.map((category) => (
-                          <li key={category.name}>
-                            <a href={category.href} className="block px-2 py-3">
-                              {category.name}
-                            </a>
-                          </li>
-                        ))}
-                      </ul>
-
-                      {filters.map((section) => (
+                      {/* Colors */}
+                      {colors && colors?.length && (
                         <Disclosure
                           as="div"
-                          key={section.id}
                           className="border-t border-gray-200 px-4 py-6"
                         >
                           {({ open }) => (
@@ -205,7 +232,7 @@ export default function Sale({ data }) {
                               <h3 className="-mx-2 -my-3 flow-root">
                                 <Disclosure.Button className="flex w-full items-center justify-between bg-white px-2 py-3 text-gray-400 hover:text-gray-500">
                                   <span className="font-medium text-gray-900">
-                                    {section.name}
+                                    Colors
                                   </span>
                                   <span className="ml-6 flex items-center">
                                     {open ? (
@@ -224,24 +251,24 @@ export default function Sale({ data }) {
                               </h3>
                               <Disclosure.Panel className="pt-6">
                                 <div className="space-y-6">
-                                  {section.options.map((option, optionIdx) => (
+                                  {colors?.map((color) => (
                                     <div
-                                      key={option.value}
+                                      key={color.value}
                                       className="flex items-center"
                                     >
                                       <input
-                                        id={`filter-mobile-${section.id}-${optionIdx}`}
-                                        name={`${section.id}[]`}
-                                        defaultValue={option.value}
+                                        id={`filter-mobile-${color.name}`}
+                                        name={`${color.name}[]`}
+                                        defaultValue={color.name}
                                         type="checkbox"
-                                        defaultChecked={option.checked}
+                                        defaultChecked={color.checked}
                                         className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
                                       />
                                       <label
-                                        htmlFor={`filter-mobile-${section.id}-${optionIdx}`}
+                                        htmlFor={`filter-mobile-${color.name}`}
                                         className="ml-3 min-w-0 flex-1 text-gray-500"
                                       >
-                                        {option.label}
+                                        {color.name}
                                       </label>
                                     </div>
                                   ))}
@@ -250,7 +277,65 @@ export default function Sale({ data }) {
                             </>
                           )}
                         </Disclosure>
-                      ))}
+                      )}
+
+                      {/* Sizes */}
+                      {sizes && sizes?.length && (
+                        <Disclosure
+                          as="div"
+                          className="border-t border-gray-200 px-4 py-6"
+                        >
+                          {({ open }) => (
+                            <>
+                              <h3 className="-mx-2 -my-3 flow-root">
+                                <Disclosure.Button className="flex w-full items-center justify-between bg-white px-2 py-3 text-gray-400 hover:text-gray-500">
+                                  <span className="font-medium text-gray-900">
+                                    Sizes
+                                  </span>
+                                  <span className="ml-6 flex items-center">
+                                    {open ? (
+                                      <MinusIcon
+                                        className="h-5 w-5"
+                                        aria-hidden="true"
+                                      />
+                                    ) : (
+                                      <PlusIcon
+                                        className="h-5 w-5"
+                                        aria-hidden="true"
+                                      />
+                                    )}
+                                  </span>
+                                </Disclosure.Button>
+                              </h3>
+                              <Disclosure.Panel className="pt-6">
+                                <div className="space-y-6">
+                                  {sizes?.map(({ name, checked }) => (
+                                    <div
+                                      key={name}
+                                      className="flex items-center"
+                                    >
+                                      <input
+                                        id={`filter-mobile-${name}`}
+                                        name={`${name}[]`}
+                                        defaultValue={name}
+                                        type="checkbox"
+                                        defaultChecked={checked}
+                                        className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                                      />
+                                      <label
+                                        htmlFor={`filter-mobile-${name}`}
+                                        className="ml-3 min-w-0 flex-1 text-gray-500"
+                                      >
+                                        {name}
+                                      </label>
+                                    </div>
+                                  ))}
+                                </div>
+                              </Disclosure.Panel>
+                            </>
+                          )}
+                        </Disclosure>
+                      )}
                     </form>
                   </Dialog.Panel>
                 </Transition.Child>
@@ -336,22 +421,10 @@ export default function Sale({ data }) {
               <div className="grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-4">
                 {/* Filters */}
                 <form className="hidden lg:block">
-                  <h3 className="sr-only">Categories</h3>
-                  <ul
-                    role="list"
-                    className="space-y-4 border-b border-gray-200 pb-6 text-sm font-medium text-gray-900"
-                  >
-                    {subCategories.map((category) => (
-                      <li key={category.name}>
-                        <a href={category.href}>{category.name}</a>
-                      </li>
-                    ))}
-                  </ul>
-
-                  {filters.map((section) => (
+                  {/* Colors */}
+                  {colors && colors?.length && (
                     <Disclosure
                       as="div"
-                      key={section.id}
                       className="border-b border-gray-200 py-6"
                     >
                       {({ open }) => (
@@ -359,7 +432,7 @@ export default function Sale({ data }) {
                           <h3 className="-my-3 flow-root">
                             <Disclosure.Button className="flex w-full items-center justify-between bg-white py-3 text-sm text-gray-400 hover:text-gray-500">
                               <span className="font-medium text-gray-900">
-                                {section.name}
+                                Colors
                               </span>
                               <span className="ml-6 flex items-center">
                                 {open ? (
@@ -378,24 +451,39 @@ export default function Sale({ data }) {
                           </h3>
                           <Disclosure.Panel className="pt-6">
                             <div className="space-y-4">
-                              {section.options.map((option, optionIdx) => (
+                              {colors?.map((color, index) => (
                                 <div
-                                  key={option.value}
+                                  key={color.code}
                                   className="flex items-center"
                                 >
                                   <input
-                                    id={`filter-${section.id}-${optionIdx}`}
-                                    name={`${section.id}[]`}
-                                    defaultValue={option.value}
+                                    id={`filter-${color.name}`}
+                                    name={`${color.name}[]`}
                                     type="checkbox"
-                                    defaultChecked={option.checked}
+                                    value={color?.checked}
+                                    onChange={() => {
+                                      let filtered = colors?.filter(
+                                        (item) => item.name === color.name
+                                      )
+
+                                      let changed = {
+                                        ...filtered[0],
+                                        checked: !filtered[0].checked,
+                                      }
+
+                                      let others = colors?.filter(
+                                        (item) => item.name !== color.name
+                                      )
+
+                                      setColors([changed, ...others])
+                                    }}
                                     className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
                                   />
                                   <label
-                                    htmlFor={`filter-${section.id}-${optionIdx}`}
+                                    htmlFor={`filter-${color.name}`}
                                     className="ml-3 text-sm text-gray-600"
                                   >
-                                    {option.label}
+                                    {color.name}
                                   </label>
                                 </div>
                               ))}
@@ -404,7 +492,62 @@ export default function Sale({ data }) {
                         </>
                       )}
                     </Disclosure>
-                  ))}
+                  )}
+
+                  {/* Sizes */}
+                  {sizes && sizes?.length && (
+                    <Disclosure
+                      as="div"
+                      className="border-b border-gray-200 py-6"
+                    >
+                      {({ open }) => (
+                        <>
+                          <h3 className="-my-3 flow-root">
+                            <Disclosure.Button className="flex w-full items-center justify-between bg-white py-3 text-sm text-gray-400 hover:text-gray-500">
+                              <span className="font-medium text-gray-900">
+                                Sizes
+                              </span>
+                              <span className="ml-6 flex items-center">
+                                {open ? (
+                                  <MinusIcon
+                                    className="h-5 w-5"
+                                    aria-hidden="true"
+                                  />
+                                ) : (
+                                  <PlusIcon
+                                    className="h-5 w-5"
+                                    aria-hidden="true"
+                                  />
+                                )}
+                              </span>
+                            </Disclosure.Button>
+                          </h3>
+                          <Disclosure.Panel className="pt-6">
+                            <div className="space-y-4">
+                              {sizes?.map(({ name, checked }) => (
+                                <div key={name} className="flex items-center">
+                                  <input
+                                    id={`filter-${name}`}
+                                    name={`${name}[]`}
+                                    defaultValue={name}
+                                    type="checkbox"
+                                    defaultChecked={checked}
+                                    className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                                  />
+                                  <label
+                                    htmlFor={`filter-${name}`}
+                                    className="ml-3 text-sm text-gray-600"
+                                  >
+                                    {name}
+                                  </label>
+                                </div>
+                              ))}
+                            </div>
+                          </Disclosure.Panel>
+                        </>
+                      )}
+                    </Disclosure>
+                  )}
                 </form>
 
                 {/* Product grid */}
@@ -483,10 +626,28 @@ export async function getServerSideProps() {
       slug,
       description,
       image{
-        'url': asset->url
-      },
+      'url': asset->url
+    },
       'products': products[]->{
         name,
+        description,
+        caption,
+        'colors': colors[]->{
+          name,
+          code,
+        },         
+        'sizes': sizes[]->{
+          name,
+        },
+        reference,
+        'images': images[]->{
+          name,
+          description,
+          'url': images.asset->url
+      }
+    }}},   
+    'favourites':favourites[]->{
+      name,
         description,
         caption,
         reference,
@@ -502,12 +663,37 @@ export async function getServerSideProps() {
           description,
           'url': images.asset->url
       }
-    }}},   
-    'favourites':favourites[]->{
+    },
+    'sale':sale[]->{
       name,
         description,
         caption,
         reference,
+        'colors': colors[]->{
+          name,
+          code,
+        },         
+        'sizes': sizes[]->{
+          name,
+        },
+        'images': images[]->{
+          name,
+          description,
+          'url': images.asset->url
+      }
+    },
+    'collection':collection[]->{
+      name,
+        description,
+        caption,
+        reference,
+        'colors': colors[]->{
+          name,
+          code,
+        },         
+        'sizes': sizes[]->{
+          name,
+        },
         'images': images[]->{
           name,
           description,
