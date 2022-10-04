@@ -47,8 +47,9 @@ export default function SubCategory({ data }) {
   const [subCategoryData, setSubCategoryData] = useState({})
   const [colors, setColors] = useState([])
   const [sizes, setSizes] = useState([])
-
-  console.log("Router: ", router.query.slug)
+  const [selectedColors, setSelectedColors] = useState([])
+  const [filteredProducts, setFilteredProducts] = useState([])
+  const [products, setProducts] = useState([])
 
   useEffect(() => {
     setAllData(data)
@@ -72,6 +73,12 @@ export default function SubCategory({ data }) {
       setSubCategoryData(...filtered)
     }
   }, [subCategories])
+
+  useEffect(() => {
+    if (subCategoryData?.name) {
+      setProducts(subCategoryData?.products)
+    }
+  }, [subCategoryData])
 
   useEffect(() => {
     let tempColors = []
@@ -111,12 +118,42 @@ export default function SubCategory({ data }) {
     }
   }, [subCategoryData])
 
-  console.log("SUB CATEGORY:  ", subCategoryData)
-  console.log("COLORS", colors)
-  console.log("SIZES", sizes)
+  useEffect(() => {
+    if (selectedColors?.length > 0) {
+      let tempProducts = []
+      products?.map((product) => {
+        product?.colors?.map((color) => {
+          let filteredColor = selectedColors?.filter(
+            (item) => item.name === color?.name
+          )
+          // console.log("FILTERED: COLOR: ", filteredColor, product)
+          if (filteredColor[0]?.name) {
+            if (tempProducts?.length > 0) {
+              let filteredProduct = tempProducts?.filter(
+                (item) => item.name === product?.name
+              )
+              if (filteredProduct[0]?.name) {
+              } else {
+                tempProducts.push(product)
+              }
+            } else {
+              tempProducts.push(product)
+            }
+          }
+        })
+      })
+
+      setFilteredProducts(tempProducts)
+    } else {
+      setFilteredProducts(products)
+    }
+  }, [selectedColors])
 
   useEffect(() => {
-    console.log("CHANGED")
+    if (colors) {
+      let filtered = colors?.filter((item) => item?.checked)
+      setSelectedColors(filtered)
+    }
   }, [colors])
 
   return (
@@ -485,29 +522,33 @@ export default function SubCategory({ data }) {
             {/* Product grid */}
             <div className="grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 md:grid-cols-3 lg:col-span-3 lg:gap-x-8">
               {subCategoryData &&
-                subCategoryData?.products?.map((product) => (
-                  <Link
-                    key={product.reference}
-                    href={`/product/${product?.reference}`}
-                  >
-                    <div className="group text-sm cursor-pointer">
-                      <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-lg bg-gray-100 group-hover:opacity-75">
-                        <img
-                          src={product?.images[0]?.url}
-                          alt={product?.name}
-                          className="h-full w-full object-cover object-center"
-                        />
+                filteredProducts?.map((product) => {
+                  return (
+                    <Link
+                      key={product.reference}
+                      href={`/product/${product?.reference}`}
+                    >
+                      <div className="group text-sm cursor-pointer">
+                        <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-lg bg-gray-100 group-hover:opacity-75">
+                          <img
+                            src={product?.images[0]?.url}
+                            alt={product?.name}
+                            className="h-full w-full object-cover object-center"
+                          />
+                        </div>
+                        <h3 className="mt-4 font-medium text-gray-900">
+                          {product?.name}
+                        </h3>
+                        <p className="italic text-gray-500">
+                          {product?.caption}
+                        </p>
+                        <p className="mt-1 text-lg font-medium text-gray-900">
+                          $20
+                        </p>
                       </div>
-                      <h3 className="mt-4 font-medium text-gray-900">
-                        {product?.name}
-                      </h3>
-                      <p className="italic text-gray-500">{product?.caption}</p>
-                      <p className="mt-1 text-lg font-medium text-gray-900">
-                        $20
-                      </p>
-                    </div>
-                  </Link>
-                ))}
+                    </Link>
+                  )
+                })}
             </div>
           </div>
         </section>
