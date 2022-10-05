@@ -118,6 +118,7 @@ export default function Collection({ data }) {
   const [colors, setColors] = useState([])
   const [sizes, setSizes] = useState([])
   const [selectedColors, setSelectedColors] = useState([])
+  const [selectedSizes, setSelectedSizes] = useState([])
   const [filteredProducts, setFilteredProducts] = useState([])
   const [products, setProducts] = useState([])
 
@@ -210,11 +211,48 @@ export default function Collection({ data }) {
   }, [selectedColors])
 
   useEffect(() => {
+    if (selectedSizes?.length > 0) {
+      let tempProducts = []
+      products?.map((product) => {
+        product?.sizes?.map((size) => {
+          let filteredSize = selectedSizes?.filter(
+            (item) => item.name === size?.name
+          )
+          if (filteredSize[0]?.name) {
+            if (tempProducts?.length > 0) {
+              let filteredProduct = tempProducts?.filter(
+                (item) => item.name === product?.name
+              )
+              if (filteredProduct[0]?.name) {
+              } else {
+                tempProducts.push(product)
+              }
+            } else {
+              tempProducts.push(product)
+            }
+          }
+        })
+      })
+
+      setFilteredProducts(tempProducts)
+    } else {
+      setFilteredProducts(products)
+    }
+  }, [selectedSizes])
+
+  useEffect(() => {
     if (colors) {
       let filtered = colors?.filter((item) => item?.checked)
       setSelectedColors(filtered)
     }
   }, [colors])
+
+  useEffect(() => {
+    if (sizes) {
+      let filtered = sizes?.filter((item) => item?.checked)
+      setSelectedSizes(filtered)
+    }
+  }, [sizes])
 
   return (
     <Layout>
@@ -574,9 +612,24 @@ export default function Collection({ data }) {
                                   <input
                                     id={`filter-${name}`}
                                     name={`${name}[]`}
-                                    defaultValue={name}
                                     type="checkbox"
-                                    defaultChecked={checked}
+                                    value={checked}
+                                    onChange={() => {
+                                      let filtered = sizes?.filter(
+                                        (item) => item.name === name
+                                      )
+
+                                      let changed = {
+                                        ...filtered[0],
+                                        checked: !filtered[0].checked,
+                                      }
+
+                                      let others = sizes?.filter(
+                                        (item) => item.name !== name
+                                      )
+
+                                      setSizes([changed, ...others])
+                                    }}
                                     className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
                                   />
                                   <label
